@@ -23,8 +23,6 @@ class User extends Model
     public $modified_at;
     public $deleted_at;
 
-    /*public $isLogged = false;
-    public $errorType = "fatal";*/
 
     public function init($user){
         $this->id = $user->id;
@@ -46,6 +44,12 @@ class User extends Model
     }
 
 
+    /**
+     * store new user in database (register)
+     *
+     * @param array $newUserData
+     * @return bool
+     */
     public function store(array $newUserData){
 
         $q = "INSERT INTO users (email, password, name, ip) VALUES (?, ?, ?, ?)";
@@ -74,6 +78,34 @@ class User extends Model
     }
 
 
+    /**
+     * Set/Choose User Language
+     *
+     * @param $language
+     * @return bool
+     */
+    public function language($language){
+        $this->language = $language;
+        $q = "UPDATE users SET language = ? WHERE id = ?";
+        $query = $this->con->prepare($q);
+
+        return $query->execute(array($language, $this->id));
+    }
+
+
+    /**
+     * Get all user used languages
+     *
+     * @return array|null
+     */
+    public function languages(){
+        $q = "SELECT DISTINCT(language) FROM words WHERE user_id = ?";
+        $query = $this->con->prepare($q);
+        if($query->execute(array($this->id))){
+            return $query->fetchAll(PDO::FETCH_COLUMN);
+        }
+        return null;
+    }
 
 
 }

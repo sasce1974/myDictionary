@@ -4,7 +4,7 @@ body{
     padding: 0;
     font-family: 'Spartan', sans-serif;
     /*background: lightblue url("https://i.pinimg.com/originals/3c/24/46/3c24462450c2a902bf7e18f3d9aada81.jpg");*/
-    background: #001B3E url("../../../3436600.jpg") fixed;
+    background: #001B3E url("/images/3436600.jpg") fixed;
     background-size: cover;
     /*background-attachment: fixed;*/
     /*display: flex;*/

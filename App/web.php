@@ -9,6 +9,7 @@ $router->add('logout', ['namespace'=>'Auth', 'controller' => 'Login', 'action' =
 
 $router->add('register', ['namespace'=>'Auth', 'controller' => 'Register', 'action' => 'index']);
 $router->add('register/store', ['namespace'=>'Auth', 'controller' => 'Register', 'action' => 'store']);
+$router->add('register/checkEmailExist', ['namespace'=>'Auth', 'controller' => 'Register', 'action' => 'checkEmailExist']);
 
 $router->add('', ['controller' => 'Words', 'action' => 'index']);
 $router->add('{controller}', ['action' => 'getAll']);

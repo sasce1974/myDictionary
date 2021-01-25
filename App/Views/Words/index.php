@@ -6,7 +6,7 @@ include $base_page;
 <main class="px-lg-4 px-md-2 px-sm-1">
     <div class="row mx-0 my-3">
 <!--        <div><img alt="Logo" src="logo_w.svg" width="90px" height="auto"><h2 id="top">MY DICTIONARY</h2></div>-->
-        <form class="col-md-4 p-0 pr-2" method="post" action="">
+        <form class="col-md-4 p-0 pr-2" method="post" action="words/changeLanguage">
             <select class="form-control" name="chosen_language" id="chosen_language" onchange="this.form.submit()">
                 <?php
                 foreach ($languages as $language){
@@ -29,12 +29,12 @@ include $base_page;
             <th><i class="fas fa-trash-alt"></i></th>
         </tr>
         <tr>
-            <td colspan="3">
-                <form action="" method="post" onmousedown="getLanguage()">
+            <td colspan="3" id="word-save-form">
+                <form action="words/store" method="post">
                     <input type="hidden" value="<?php print $token; ?>" name="token">
-                    <input aria-label="Language" type="hidden" placeholder="Language" name="language" id="language">
-                    <input aria-label="New words1" type="text" placeholder="ex. とり" name="input1">
-                    <input aria-label="New words2" type="text" placeholder="ex. Bird" name="input2">
+<!--                    <input aria-label="Language" type="hidden" placeholder="Language" name="language" id="language">-->
+                    <input aria-label="New words1" type="text" placeholder="ex. とり" name="lang1">
+                    <input aria-label="New words2" type="text" placeholder="ex. Bird" name="lang2">
                     <button type="submit"><i class="fas fa-paper-plane"></i> Insert</button>
                 </form>
             </td>
@@ -44,21 +44,21 @@ include $base_page;
         <tbody id="tbody">
 
  <!--       --><?php
-/*
-        if(count($words) === 0){
+
+        /*if(count($words) === 0){
             print "<h3>NO DICTIONARY DATA FOUND!</h3>";
-        }
+        }*/
 
         foreach ($words as $row){
 
-            print "<tr class='bor_bottom'> \n";
+            print "<tr class='bor_bottom' onclick='getRow(" . $row->id . ")'> \n";
             print "<td>" . ucfirst(trim($row->lang1)) . "</td>";
             print "<td>" . ucfirst(trim($row->lang2)) . "</td>";
-            print "<td><a href='?delete_line={$row->id}&token=$token'>&#215;</a></td>";
+            print "<td><a href='words/{$row->id}/delete'>&#215;</a></td>";
             print "</tr> \n";
         }
         //$con = $rows = $q = null;
-        */?>
+        ?>
         </tbody>
     </table>
 
@@ -74,6 +74,33 @@ include $base_page;
         let lang_input = document.getElementById('language');
         lang_input.value = chosen_lang;
     }
+
+    function getRow(id){
+        console.log(id);
+        $.post('words/show', {'id':id}, setWordInput);
+    }
+    let old_input = "";
+    function setWordInput(data) {
+        data = JSON.parse(data);
+        let form = document.getElementById('word-save-form');
+        old_input = form.innerHTML;
+        let input = "";
+        input = "<form action=\"words/" + data['id'] + "/update\" method=\"post\">\n" +
+            "   <input type=\"hidden\" value=\"<?php print $token; ?>\" name=\"token\">\n" +
+            "   <input class='bg-warning' type=\"text\" name=\"language\" id=\"language\" value='" + data['language'] + "'>\n" +
+            "   <input class='bg-info' type=\"text\" name=\"lang1\" value='" + data['lang1'] + "'>\n" +
+            "   <input class='bg-info' type=\"text\" name=\"lang2\" value='" + data['lang2'] + "'>\n" +
+            "   <button type=\"submit\"><i class=\"fas fa-paper-plane\"></i> Update</button>\n" +
+            "   <button type=\"cancel\"><i class=\"fas fa-times\"></i> Cancel</button>\n" +
+            "</form>";
+        form.innerHTML = input;
+    }
+    /*document.body.onclick = function () {
+        let form = document.getElementById('word-save-form');
+        if(old_input !== ""){
+            form.innerHTML = old_input;
+        }
+    }*/
 </script>
 
 

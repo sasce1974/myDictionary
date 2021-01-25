@@ -46,15 +46,15 @@ if(!Auth::check()){
 <body>
 <div id="loader" class="loader-dual-ring"></div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light text-dark">
-    <div><img alt="Logo" src="images/logo_w.svg" width="90px" height="auto"><h2 id="top">MY DICTIONARY</h2></div>
-    <a class="nav-link" href="/">Home</a>
+    <div><img alt="Logo" src="images/logo_w.svg" width="70px" height="auto"><h3 id="top">MY DICTIONARY</h3></div>
+<!--    <a class="nav-link" href="/">Home</a>-->
 <!--    <a class="nav-link" href="/boards/1/students">Board 1</a> |-->
 <!--    <a class="nav-link" href="/boards/2/students">Board 2</a>-->
     <?php
         if(isset($user)){
         ?>
         <div class="pull-right"><?php print "Welcome " . $user->name; ?>
-            <a href="/logout" style="color: #D4DFE6;margin-left: 10px">Log off</a>
+            <a href="/logout" style="background:blue;color:#fff;border-radius:5px;padding:3px;font-size:small;margin-left: 10px">Log off</a>
         </div>
         <?php
     }else{

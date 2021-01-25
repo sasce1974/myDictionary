@@ -78,5 +78,14 @@ class Register extends Controller
     }
 
 
+    public function checkEmailExist(){
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+        $user = new User();
+        if($user->checkIfEmailExist($email)){
+            print "<span style='color:#f55;font-size:80%;'>This email is taken &nbsp;&#x2718;</span>";
+        }else{
+            print "<span style='color:#3b3;font-size:80%;'>This email is available &nbsp;&#x2714;</span>";
+        }
+    }
 
 }

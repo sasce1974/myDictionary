@@ -132,10 +132,9 @@ HERE;
 
 <script type="text/javascript">
     function checkIfUserExist() {
-        var user = $("#email").val();
-        if (user!=="") {
-            console.log(user);
-            //$.post("check_new_user.php",{"check_email":user},check_info);
+        let email = $("#email").val();
+        if (email!=="") {
+            $.post("/register/checkEmailExist",{"email":email},check_info);
         }
     }
     function check_info(data, textStatus){

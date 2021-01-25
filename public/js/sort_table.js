@@ -95,9 +95,9 @@ function fillTableRows(data) {
             data[i].lang1 = newXCell.join(" ");
             data[i].lang2 = newYCell.join(" ");
 
-            body += "<tr class='bor_bottom' style='table-row'>" +
+            body += "<tr class='bor_bottom' style='table-row' onclick='getRow(" + data[i].id + ")'>" +
                 "<td>" + data[i].lang1 + "</td><td>" + data[i].lang2 +
-                "</td><td class='text-danger h4'><a href='?delete_line=" + data[i].id + "'>x</a></td>" +
+                "</td><td class='text-danger h4'><a href='words/" + data[i].id + "/delete'>x</a></td>" +
                 "</tr>";
         }
         tbody.innerHTML = body;
