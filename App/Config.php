@@ -11,8 +11,8 @@ class Config
     private static $config = [
         'db_host'=>'localhost',
         'db_name'=>'dictionary',
-        'db_user'=>'root',
-        'db_pass'=>'qSmU9JdK3kdx4W2',
+        'db_user'=>'user',
+        'db_pass'=>'secret',
         'show_errors'=>true,
         // here add other configurations
         'app.url'=>'http://mydictionary.test'
