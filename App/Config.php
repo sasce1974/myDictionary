@@ -8,15 +8,7 @@ class Config
 {
     private static $instance = null;
 
-    private static $config = [
-        'db_host'=>'localhost',
-        'db_name'=>'dictionary',
-        'db_user'=>'user',
-        'db_pass'=>'secret',
-        'show_errors'=>true,
-        // here add other configurations
-        'app.url'=>'http://mydictionary.test'
-    ];
+    private static $config = [];
 
 
     private function __construct(){}
@@ -31,10 +23,35 @@ class Config
     }
 
     public static function getConfig($index){
+
+        self::$config = self::getEnv();
+
         if(isset(self::$config[$index])){
             return self::$config[$index];
         }else{
             throw new \Exception("Configuration $index not found", 404);
+        }
+    }
+
+    private static function getEnv(){
+        try {
+            $config_array = [];
+            if (file_exists('../.env')) {
+                $env = file_get_contents('../.env');
+
+                $rows = explode("\n", $env);
+                foreach ($rows as $row) {
+                    $row = explode("=", $row);
+                    $config_array[trim($row[0])] = trim($row[1]);
+                }
+            } else {
+                throw new \Exception("File '.env' not found. Please make sure you have 
+            set up the environment file - copy '.env.example', rename to '.env', open it and edit
+            according your settings.", 404);
+            }
+            return $config_array;
+        }catch (\Exception $e){
+            print $e->getMessage();
         }
     }
 }

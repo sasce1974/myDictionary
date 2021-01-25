@@ -3,6 +3,7 @@
 
 namespace Core;
 
+use App\Config;
 use App\Models\Auth;
 use App\Models\User;
 
@@ -38,7 +39,6 @@ abstract class Controller
             Auth::_initUser();
             //var_dump($_SESSION);
         }
-
     }
 
     /**
