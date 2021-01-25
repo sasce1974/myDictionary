@@ -1,0 +1,20 @@
+{
+    "name": "sasce1974/my_dictionary",
+    "description": "Personal dictionary for any language. Insert own words with translation and share within the team.",
+    "authors": [
+        {
+            "name": "Aleksandar Ardjanliev",
+            "email": "sasce1974@yahoo.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "ext-pdo": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Core\\": "Core/",
+            "App\\": "App/"
+        }
+    }
+}
