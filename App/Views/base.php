@@ -54,7 +54,7 @@ if(!Auth::check()){
         if(isset($user)){
         ?>
         <div class="pull-right"><?php print "Welcome " . $user->name; ?>
-            <a href="/logout" style="background:blue;color:#fff;border-radius:5px;padding:3px;font-size:small;margin-left: 10px">Log off</a>
+            <a href="/logout" style="background:blue;color:#fff;border-radius:5px;padding3px;font-size:small;margin-left: 10px">Log off</a>
         </div>
         <?php
     }else{
