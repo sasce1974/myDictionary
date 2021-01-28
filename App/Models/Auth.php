@@ -57,8 +57,8 @@ class Auth extends Model
     public static function authenticate($email, $password){
         $q = "SELECT * from users WHERE email = ?";
         $query = DB_connection::getCon()->prepare($q);
-        $r = $query->execute(array($email));
-        if(!$r){
+        $query->execute(array($email));
+        if($query->rowCount() !== 1){
             $_SESSION['error'][] = "User not found!";
             return false;
         }

@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Config;
 use Core\Model;
 use App\Models\Word;
+use App\Models\Language;
 use PDO;
 
 class User extends Model
@@ -16,6 +17,7 @@ class User extends Model
     private $password;
     public $name;
     public $language;
+    public $language_id;
     public $team_id;
     public $ip;
     public $about;
@@ -30,6 +32,7 @@ class User extends Model
         $this->password = $user->password;
         $this->name = $user->name;
         $this->language = $user->language;
+        $this->language_id = $user->language_id;
         $this->team_id = $user->team_id;
         $this->ip = $user->ip;
         $this->about = $user->about;
@@ -43,6 +46,12 @@ class User extends Model
         return $word->where('user_id', $this->id);
     }
 
+    public function wordsPerLanguage($language_id){
+        $q = "SELECT COUNT(id) FROM words WHERE language_id = ? AND user_id = ?";
+        $query = $this->con->prepare($q);
+        $query->execute(array($language_id, $this->id));
+        return $query->fetchColumn();
+    }
 
     /**
      * store new user in database (register)
@@ -81,15 +90,27 @@ class User extends Model
     /**
      * Set/Choose User Language
      *
-     * @param $language
+     * @param $language_id
      * @return bool
      */
-    public function language($language){
-        $this->language = $language;
-        $q = "UPDATE users SET language = ? WHERE id = ?";
+    public function setLanguage($language_id){
+        $this->language_id = $language_id;
+        $q = "UPDATE users SET language_id = ? WHERE id = ?";
         $query = $this->con->prepare($q);
 
-        return $query->execute(array($language, $this->id));
+        return $query->execute(array($language_id, $this->id));
+    }
+
+    /**
+     * returns this user set language or false
+     *
+     * returned language is instance of Language class
+     *
+     * @return mixed
+     */
+    public function getLanguage(){
+        $language = new Language();
+        return $language->find($this->language_id);
     }
 
 
@@ -98,14 +119,16 @@ class User extends Model
      *
      * @return array|null
      */
+
     public function languages(){
-        $q = "SELECT DISTINCT(language) FROM words WHERE user_id = ?";
+        $q = "SELECT l.* FROM languages l, users_languages ul WHERE ul.user_id = ? AND ul.language_id = l.id";
         $query = $this->con->prepare($q);
         if($query->execute(array($this->id))){
-            return $query->fetchAll(PDO::FETCH_COLUMN);
+            return $query->fetchAll(PDO::FETCH_CLASS, 'App\Models\Language');
         }
         return null;
     }
+
 
 
 }

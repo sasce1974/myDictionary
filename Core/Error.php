@@ -45,7 +45,7 @@ class Error
         }
         http_response_code($code);
 
-        if (\App\Config::getConfig('show_errors')) {
+        if ((bool)\App\Config::getConfig('show_errors')) {
             echo "<h1>Error</h1>";
             echo "<p>Uncaught exception: '" . get_class($exception) . "'</p>";
             echo "<p>Message: '" . $exception->getMessage() . "'</p>";

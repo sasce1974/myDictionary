@@ -42,7 +42,7 @@ if(Auth::check()) {
 <body>
 <div id="loader" class="loader-dual-ring"></div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light text-dark">
-    <div><img alt="Logo" src="images/logo_w.svg" width="90px" height="auto"><h2 id="top">MY DICTIONARY</h2></div>
+    <div><img alt="Logo" src="images/logo_w.svg" width="70px" height="auto"><h5 id="top">MY DICTIONARY</h5></div>
 </nav>
 
 <div>

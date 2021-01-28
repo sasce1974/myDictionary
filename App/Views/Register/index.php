@@ -17,16 +17,16 @@ try {
     <!--	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">-->
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles/bootstrap.min.css">
+<!--    <link rel="stylesheet" href="css/bootstrap.min.css">-->
     <!--    Font Awesome 5 Icons-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles/font-awesome.css">
+<!--    <link rel="stylesheet" href="css/font-awesome.css">-->
     <!--<link rel="stylesheet" href="shards-dashboards.1.1.0.min.css">-->
 
     <!--<link rel="stylesheet" href="styles/all.css">-->
     <link rel="shortcut icon" href="../favicon.ico">
-
-    <link href="/css/login_form.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?x=3">
+    <link href="css/login_form.css?x=1" rel="stylesheet">
 
     <script src="js/jquery-3.3.1.min.js"></script>
 
@@ -76,7 +76,7 @@ HERE;
         ?>
         </div>
         <div class="m-3">
-            <form id="newUserForm" method="POST" action="/register/store">
+            <form class="d-block" id="newUserForm" method="POST" action="/register/store">
                 <input type="hidden" name="init" value="<?php print $_SESSION['token'];  ?>">
                 <div class="form-group">
                     <div class="input-group">

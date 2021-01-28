@@ -8,7 +8,7 @@ use App\Interfaces\iModel;
 use PDO;
 use PDOException;
 
-abstract class Model implements iModel
+abstract class Model implements iModel, \Countable
 {
     /**
      * contains table name.
@@ -77,8 +77,7 @@ abstract class Model implements iModel
     function all(){
         try {
             $q = "SELECT * FROM $this->table";
-            $query = $this->con->prepare($q);
-            $query->execute(array($this->table));
+            $query = $this->con->query($q);
 
             return $query->fetchAll(PDO::FETCH_CLASS, $this->model);
         }catch (PDOException $e){
@@ -131,4 +130,12 @@ abstract class Model implements iModel
         return (array) $this;
     }
 
+    public function count(){
+        return count($this);
+    }
+
+    function __destruct()
+    {
+        $this->con = null;
+    }
 }

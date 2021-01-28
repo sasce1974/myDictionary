@@ -3,6 +3,7 @@
 
 namespace App\Controllers;
 use App\Models\Auth;
+use App\Models\Language;
 use App\Models\User;
 use App\Models\Word;
 use Core\Controller;
@@ -16,18 +17,20 @@ class Words extends Controller
             $u = Auth::user();
         }else{
             $u = new User();
+            //throw new \Exception("User Not Authenticated", 403);
         }
 
         $languages = $u->languages();
-        //$languages = ['Japanese', 'French'];
+
+        $lan = new Language();
         $word = new Word();
-        $words = $word->last20words($u);
 
         View::render('Words/index.php', [
             'user'=>$u,
-            'words'=>$words,
+            'words'=>$word->limitWords($u, 15),
             'languages'=>$languages,
-            'chosen_language'=>$u->language
+            'all_lang'=>$lan->all(),
+            'chosen_language'=>$u->getLanguage()
         ]);
     }
 
@@ -44,9 +47,9 @@ class Words extends Controller
 
     public function changeLanguageAction(){
         if(isset($_POST['chosen_language']) && $_POST['chosen_language'] !=""){
-            $language = filter_input(INPUT_POST, 'chosen_language', FILTER_SANITIZE_STRING);
+            $language_id = filter_input(INPUT_POST, 'chosen_language', FILTER_SANITIZE_NUMBER_INT);
             if(Auth::check()){
-                Auth::user()->language($language);
+                Auth::user()->setLanguage($language_id);
             }
 
         }
@@ -85,10 +88,10 @@ class Words extends Controller
     }
 
     public function storeAction(){
-        $lang1 = filter_input(INPUT_POST, 'lang1', FILTER_SANITIZE_STRING);
-        $lang2 = filter_input(INPUT_POST, 'lang2', FILTER_SANITIZE_STRING);
+        $lang1 = trim(filter_input(INPUT_POST, 'lang1', FILTER_SANITIZE_STRING));
+        $lang2 = trim(filter_input(INPUT_POST, 'lang2', FILTER_SANITIZE_STRING));
         $token = filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
-        if(isset($_SESSION['token']) && $_SESSION['token'] == $token) {
+        if(isset($_SESSION['token']) && $_SESSION['token'] == $token && !empty($lang2) && !empty($lang1)) {
             $word = new Word();
             if ($word->store($lang1, $lang2)) {
                 $_SESSION['message'] = "Record created";

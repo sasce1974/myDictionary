@@ -75,10 +75,10 @@ form input{
 }
 main{
     display: flex;
-    flex-direction: column;
+    /*flex-direction: column;*!*/
     align-self: center;
     min-width: 400px;
-    max-width: 1000px;
+    max-width: 1440px;
     margin: auto;
 
 

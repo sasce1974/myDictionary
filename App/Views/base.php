@@ -35,8 +35,8 @@ if(!Auth::check()){
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/style.css?x=1">
-    <link rel="stylesheet" href="css/loader.css?x=1">
+    <link rel="stylesheet" href="css/style.css?x=12354">
+    <link rel="stylesheet" href="css/loader.css?x=2">
 
     <?php
     if(isset($additional_css)) print $additional_css;
@@ -53,14 +53,14 @@ if(!Auth::check()){
     <?php
         if(isset($user)){
         ?>
-        <div class="pull-right"><?php print "Welcome " . $user->name; ?>
-            <a href="/logout" style="background:blue;color:#fff;border-radius:5px;padding3px;font-size:small;margin-left: 10px">Log off</a>
+        <div class="ml-auto"><?php print "Welcome " . $user->name; ?>
+            <a href="/logout" class="btn btn-sm btn-primary mx-2">Log off</a>
         </div>
         <?php
     }else{
          ?>
-            <div class="pull-right">
-                <a href="/login" style="color: #D4DFE6;margin-left: 10px">Log in</a>
+            <div class="ml-auto mr-2">
+                <a href="/login" class="btn btn-sm btn-primary">Log in</a>
             </div>
     <?php
         }

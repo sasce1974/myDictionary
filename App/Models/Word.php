@@ -53,10 +53,10 @@ class Word extends Model
 
     }
 
-    public function last20words($user){
-        $q = "SELECT * FROM words WHERE user_id = ? AND language = ? ORDER BY created_at DESC LIMIT 20";
+    public function limitWords($user, $limit = 20){
+        $q = "SELECT * FROM words WHERE user_id = ? AND language_id = ? ORDER BY created_at DESC LIMIT ?";
         $query = $this->con->prepare($q);
-        $query->execute(array($user->id, $user->language));
+        $query->execute(array($user->id, $user->language_id, $limit));
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
 
@@ -66,9 +66,9 @@ class Word extends Model
 
     public function store($lang1, $lang2){
         $user = Auth::user();
-        $q="INSERT INTO words (lang1, lang2, user_id, language) VALUES (?, ?, ?, ?)";
+        $q="INSERT INTO words (lang1, lang2, user_id, language_id) VALUES (?, ?, ?, ?)";
         $query = $this->con->prepare($q);
-        if($query->execute(array($lang1, $lang2, $user->id, $user->language))){
+        if($query->execute(array($lang1, $lang2, $user->id, $user->language_id))){
             if($query->rowCount() === 1) return true;
         }
         return false;
