@@ -51,13 +51,36 @@ function errorMessage(xhr, status, error) {
     loader.style.display = "none";
     table.style.filter = "none";
 }
+/*
+function recentWords(limit) {
+    $.get('/words/mostRecentWords', {'limit':limit}, fillRows).fail(errorMessage);
+}
 
+function fillRows(data) {
+console.log(data);
+    let tbody = document.getElementById('tbody');
+    tbody.innerHTML = "";
+    let body = "";
+    if(data.length > 0){
+        data = JSON.parse(data);
+        for(let i=0; i < data.length; i++) {
+            body += "<tr class='bor_bottom' style='table-row' onclick='getRow(" + data[i].id + ")'>" +
+                "<td>" + data[i].lang1.replace(/^./, data[i].lang1[0].toUpperCase()) + "</td><td>" +
+                 data[i].lang2.replace(/^./, data[i].lang2[0].toUpperCase()) +
+                "</td><td class='text-danger h4'><a href='words/" + data[i].id + "/delete'>x</a></td>" +
+                "</tr> \n";
+        }
+        tbody.innerHTML = body;
+    }
+    loader.style.display = "none";
+    table.style.filter = "none";
+}*/
 
 function searchWord() {
     globalTimeout = null;
     let word;
     word = document.getElementById('search').value.trim();
-    $.get('/words/search', {'string': word}, fillTableRows).fail(errorMessage);;
+    $.get('/words/search', {'string': word}, fillTableRows).fail(errorMessage);
 }
 
 function fillTableRows(data) {
@@ -66,6 +89,7 @@ function fillTableRows(data) {
     let patt = new RegExp(word, "i");
     let tbody = document.getElementById('tbody');
     tbody.innerHTML = "";
+    let nlang1, nlang2;
 
     if(data.length > 0 && word !== ""){
         data = JSON.parse(data);
@@ -92,11 +116,12 @@ function fillTableRows(data) {
                 newYCell.push(ay[z]);
             }
 
-            data[i].lang1 = newXCell.join(" ");
-            data[i].lang2 = newYCell.join(" ");
+            nlang1 = newXCell.join(" ");
+            nlang2 = newYCell.join(" ");
 
             body += "<tr class='bor_bottom' style='table-row' onclick='getRow(" + data[i].id + ")'>" +
-                "<td>" + data[i].lang1 + "</td><td>" + data[i].lang2 +
+                "<td>" + nlang1 + "</td>" +
+                "<td>" + nlang2 +  "<span class='info-mark' onclick='getTranslation(\"" + data[i].lang2 + "\")'>?</span>" +
                 "</td><td class='text-danger h4'><a href='words/" + data[i].id + "/delete'>x</a></td>" +
                 "</tr>";
         }
@@ -110,6 +135,11 @@ function fillTableRows(data) {
 
 }
 
+/*window.onload = function () {
+    //check if at least one dictionary is set
+    //runLoader();
+    //recentWords(15);
+};*/
 
 /*function search(){
     globalTimeout = null;

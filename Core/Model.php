@@ -72,11 +72,13 @@ abstract class Model implements iModel, \Countable
      * Each model object data from database is passed as argument to Model constructor
      * processed in the init method, then collected in $this->collection array
      *
+     * @param array|null $column
      * @return array
      */
-    function all(){
+    function all(array $column = null){
         try {
-            $q = "SELECT * FROM $this->table";
+            $column = $column ? implode(", ", $column) : "*";
+            $q = "SELECT $column FROM $this->table";
             $query = $this->con->query($q);
 
             return $query->fetchAll(PDO::FETCH_CLASS, $this->model);
@@ -103,7 +105,7 @@ abstract class Model implements iModel, \Countable
      * Return instance of model by given ID
      *
      * @param $id
-     * @return $this
+     * @return $this | false
      */
     function find($id){
         $q = "SELECT * FROM $this->table WHERE id = ?";

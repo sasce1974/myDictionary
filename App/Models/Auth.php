@@ -17,7 +17,6 @@ class Auth extends Model
     private static $id;
     //public $ip;
 
-
     public static function check(){
         return isset(self::$id);
     }
@@ -91,7 +90,6 @@ class Auth extends Model
         if (session_id() == '') {
             session_start();
         }
-
         $_SESSION['auth_id'] = self::$id; //$this->id;
         $_SESSION['isLogged'] = self::$isLogged;
         $_SESSION['session_time_created'] = time(); //time the session is created
@@ -101,8 +99,8 @@ class Auth extends Model
         if (session_id() == '') {
             session_start();
         }
-        self::$id = $_SESSION['auth_id'];
-        self::$isLogged = $_SESSION['isLogged'];
+        self::$id = $_SESSION['auth_id'] ?? null;
+        self::$isLogged = $_SESSION['isLogged'] ?? false;
     }
 
     public static function logout() {

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Word;
 use Core\Controller;
 use Core\View;
+use http\Client;
 
 
 class Words extends Controller
@@ -19,19 +20,26 @@ class Words extends Controller
             $u = new User();
             //throw new \Exception("User Not Authenticated", 403);
         }
-
         $languages = $u->languages();
 
         $lan = new Language();
-        $word = new Word();
+        //$word = new Word();
 
+        //var_dump($u->groups()); exit();
         View::render('Words/index.php', [
             'user'=>$u,
-            'words'=>$word->limitWords($u, 15),
+            //'words'=>$word->limitWords($u, 15),
             'languages'=>$languages,
-            'all_lang'=>$lan->all(),
+            'all_lang'=>$lan->all(['id', 'name']),
             'chosen_language'=>$u->getLanguage()
         ]);
+    }
+
+    public function mostRecentWords(){
+        $user = Auth::user();
+        $limit = filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT);
+        $word = new Word();
+        print json_encode($word->limitWords($user, $limit));
     }
 
     /**
@@ -66,10 +74,10 @@ class Words extends Controller
     public function updateAction(){
         $id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
         $token = filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
-        $lang1 = filter_input(INPUT_POST, 'lang1', FILTER_SANITIZE_STRING);
-        $lang2 = filter_input(INPUT_POST, 'lang2', FILTER_SANITIZE_STRING);
-        $language = filter_input(INPUT_POST, 'language', FILTER_SANITIZE_STRING);
-        $newData = ['lang1'=>$lang1, 'lang2'=>$lang2, 'language'=>$language];
+        $lang1 = trim(filter_input(INPUT_POST, 'lang1', FILTER_SANITIZE_STRING));
+        $lang2 = trim(filter_input(INPUT_POST, 'lang2', FILTER_SANITIZE_STRING));
+        //$language = trim(filter_input(INPUT_POST, 'language', FILTER_SANITIZE_STRING));
+        $newData = ['lang1'=>$lang1, 'lang2'=>$lang2];
         if(isset($_SESSION['token']) && $_SESSION['token'] == $token) {
             $word = new Word();
             if ($word->update($id, $newData)) {
@@ -128,4 +136,45 @@ class Words extends Controller
         header("Location: /");
         exit();
     }
+
+
+    /*public function truncateAllWordsAction(){
+        $word = new Word();
+        if($r = $word->truncateAllWords()){
+            return "$r records truncated";
+        }else{
+            return "No action was performed";
+        }
+    }*/
+
+    /*public function countApiCallsAction(){
+        $w = new Word();
+        $r = $w->saveApiCall('test');
+        print $w->countApiCalls();
+    }*/
+
+    public function getWordInfoAction(){
+
+        $word = filter_input(INPUT_GET, 'word', FILTER_SANITIZE_STRING);
+        $w = new Word();
+
+        if($w->countApiCalls() > 2200){
+            echo '["word": "Word Limit Exceeded"]';
+            exit(500);
+        }
+
+        $response = "";
+        try {
+
+            $w->saveApiCall($word);
+
+            $response = $w->wordInfo($word);
+
+        } catch (\Exception $e) {
+            print $e->getMessage();
+        }
+
+        echo $response;
+    }
+
 }

@@ -23,6 +23,23 @@ if(Auth::check()) {
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>MyDictionary | Login</title>
 
+    <meta name="description" content="Multi language dictionary to English dictionary - Personal and Team/Classroom shared dictionary">
+    <meta name="keywords" content="Dictionary, English, Language, Study language, Share dictionary with team, Multilanguage">
+    <meta name="author" content="3Delacto">
+
+    <meta property="og:title" content="MyDictionary | Login">
+    <meta property="og:image" content="https://3delacto.com/img/logo.png">
+    <meta property="og:url" content="https://dictionary.papucraft.com">
+    <meta property="og:site_name" content="MyDictionary">
+    <meta property="og:description" content="Multi language dictionary to English dictionary - Personal and Team/Classroom shared dictionary">
+    <meta name="twitter:title" content="MyDictionary | Login">
+    <meta name="twitter:image" content="https://3delacto.com/img/logo.png">
+    <meta name="twitter:url" content="https://dictionary.papucraft.com">
+    <meta name="twitter:card" content="Multi language dictionary to English dictionary - Personal and Team/Classroom shared dictionary">
+    <link rel="icon" type="image/png" href="https://3delacto.com/favicon.ico">
+
+
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
     <!-- Scripts -->

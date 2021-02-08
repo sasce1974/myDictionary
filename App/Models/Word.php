@@ -66,6 +66,8 @@ class Word extends Model
 
     public function store($lang1, $lang2){
         $user = Auth::user();
+        $lang1 = ucfirst($lang1);
+        $lang2 = ucfirst($lang2);
         $q="INSERT INTO words (lang1, lang2, user_id, language_id) VALUES (?, ?, ?, ?)";
         $query = $this->con->prepare($q);
         if($query->execute(array($lang1, $lang2, $user->id, $user->language_id))){
@@ -84,9 +86,9 @@ class Word extends Model
      */
     public function update($id, $newData){
         $user = Auth::user();
-        $q="UPDATE words SET lang1=?, lang2=?, language=? WHERE id = ? AND user_id = ?";
+        $q="UPDATE words SET lang1=?, lang2=? WHERE id = ? AND user_id = ?";
         $query = $this->con->prepare($q);
-        if($query->execute(array($newData['lang1'], $newData['lang2'], $newData['language'], $id, $user->id))){
+        if($query->execute(array($newData['lang1'], $newData['lang2'], $id, $user->id))){
             if($query->rowCount() === 1) return true;
         }
         return false;
@@ -104,5 +106,70 @@ class Word extends Model
         $query = $this->con->prepare($q);
         return $query->execute(array(Auth::id(), $id));
     }
+
+    /*public function truncateAllWords(){
+        $q = "SELECT id, lang1, lang2 FROM words";
+        $query = $this->con->query($q);
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $record){
+            $lang1 = trim($record['lang1']);
+            $lang2 = trim($record['lang2']);
+            $id = $record['id'];
+            $query = $this->con->prepare("UPDATE words SET lang1 = ?, lang2 = ? 
+                                                WHERE id = ?");
+            $query->execute(array($lang1, $lang2, $id));
+        }
+
+        var_dump($result); exit();
+    }*/
+
+    public function countApiCalls(){
+        $query = $this->con->query("SELECT COUNT(id) FROM word_api_calls
+            WHERE created_at BETWEEN DATE_SUB(NOW(), INTERVAL 1 day) AND NOW()");
+        return $query->fetchColumn();
+    }
+
+    public function saveApiCall($word){
+        $query = $this->con->prepare("INSERT INTO word_api_calls (word, user) VALUES (?,?)");
+        return $query->execute(array($word, Auth::id()));
+    }
+
+
+    public function wordInfo($word){
+
+
+
+        //$encoded_url_word = urlencode($word);
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => "https://wordsapiv1.p.rapidapi.com/words/" . $word,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => [
+                "x-rapidapi-host: wordsapiv1.p.rapidapi.com",
+                "x-rapidapi-key: 74dd5a2a37msh376da61d68fb3dcp137a1djsnf76402615809"
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            http_response_code(500);
+            //throw new \Exception("Error retrieving info for \'$word\'");
+            return "cURL Error #:" . $err;
+        } else {
+            return $response;
+        }
+    }
+
 
 }

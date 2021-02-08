@@ -18,7 +18,7 @@ class User extends Model
     public $name;
     public $language;
     public $language_id;
-    public $team_id;
+    //public $team_id;
     public $ip;
     public $about;
     public $created_at;
@@ -29,11 +29,11 @@ class User extends Model
     public function init($user){
         $this->id = $user->id;
         $this->email = $user->email;
-        $this->password = $user->password;
+        //$this->password = $user->password;
         $this->name = $user->name;
         $this->language = $user->language;
         $this->language_id = $user->language_id;
-        $this->team_id = $user->team_id;
+        //$this->team_id = $user->team_id;
         $this->ip = $user->ip;
         $this->about = $user->about;
         $this->created_at = $user->created_at;
@@ -44,6 +44,25 @@ class User extends Model
     public function words(){
         $word = new Word();
         return $word->where('user_id', $this->id);
+    }
+
+    public function groups(){
+        /*$q = "SELECT g.* FROM `groups` g LEFT JOIN groups_users gu
+                ON gu.group_id = g.id WHERE gu.user_id = {$this->id}";*/
+
+        $q = "SELECT g.* FROM `groups` g, groups_users gu WHERE
+                gu.user_id = {$this->id} AND gu.group_id = g.id";
+        $query = $this->con->query($q);
+        return $query->fetchAll(PDO::FETCH_CLASS, 'App\Models\Group');
+    }
+
+    public function group($id){
+        $q = "SELECT g.* FROM `groups` g, groups_users gu 
+                WHERE gu.group_id = g.id AND gu.user_id = {$this->id} AND g.id = ?";
+        $query = $this->con->prepare($q);
+        $query->execute(array($id));
+        $query->setFetchMode(PDO::FETCH_CLASS, 'App\Models\Group');
+        return $query->fetch(PDO::FETCH_CLASS);
     }
 
     public function wordsPerLanguage($language_id){
@@ -129,6 +148,8 @@ class User extends Model
         return null;
     }
 
-
+    public function refresh(){
+        $this->init(Auth::user());
+    }
 
 }

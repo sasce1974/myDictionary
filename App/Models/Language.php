@@ -45,12 +45,17 @@ class Language extends Model
 
 
     public function save($id){
-        $user_id = Auth::id();
+        $user = Auth::user();
 
-        if($this->checkIfExist($user_id, $id) === 0){
+        if($this->checkIfExist($user->id, $id) == 0){
             $q = "INSERT INTO users_languages (user_id, language_id) VALUES (?, ?)";
             $query = $this->con->prepare($q);
-            if($query->execute(array($user_id, $id))) return true;
+            $new_id = $query->execute(array($user->id, $id));
+            if($new_id) {
+                //set user to new language
+                $user->setLanguage($id);
+                return true;
+            }
         }
         return false;
     }
