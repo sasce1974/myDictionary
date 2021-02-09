@@ -13,6 +13,11 @@ use http\Client;
 
 class Words extends Controller
 {
+    /*public function sharedAction(){
+        $word = new Word();
+        return $word->getSharingUsersId();
+    }*/
+
     public function indexAction(){
         if(Auth::check()){
             $u = Auth::user();

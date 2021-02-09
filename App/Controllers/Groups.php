@@ -274,7 +274,7 @@ class Groups extends Controller
             $content .= "Welcome to our group at the MyDictionary.<br>";
             $content .= "Here we share our words/phrases that we insert into the dictionary<br>";
             $content .= "during our language study adventure. We hope you will have fun and find<br>";
-            $content .= "this membership in our group useful into your learning process.";
+            $content .= "this membership in the group useful to your learning process.";
 
             $m = new WelcomeMail();
             $message = $m->setMessage($subject, $content);

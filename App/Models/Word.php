@@ -38,6 +38,13 @@ class Word extends Model
         return $user->where('id', $this->user_id);
     }
 
+    /*public function getSharingUsersId(){
+        $q = "SELECT DISTINCT user_id FROM groups_users WHERE group_id IN (SELECT group_id FROM groups_users WHERE user_id = 1)";
+        $query = $this->con->query($q);
+        //$query->execute(array(Auth::id()));
+        var_dump($query->fetchAll(PDO::FETCH_COLUMN));
+    }*/
+
     /**
      * return array of instances of word class for the current user
      *
@@ -45,18 +52,26 @@ class Word extends Model
      * @return array
      */
     public function search($string){
-        $q = "SELECT * FROM words WHERE (lang1 LIKE ? OR lang2 LIKE ?) AND user_id = ? LIMIT 150";
+        $user_id = Auth::id();
+        $q = "SELECT * FROM words WHERE (lang1 LIKE ? OR lang2 LIKE ?) AND 
+            (user_id = ? OR user_id IN 
+            (SELECT DISTINCT user_id FROM groups_users WHERE group_id IN 
+            (SELECT group_id FROM groups_users WHERE user_id = ?))) 
+            ORDER BY created_at DESC LIMIT 150";
         $query = $this->con->prepare($q);
-        $query->execute(array("%$string%", "%$string%", Auth::id()));
+        $query->execute(array("%$string%", "%$string%", $user_id, $user_id));
         //$query = $this->con->query($q);
         return $query->fetchAll(PDO::FETCH_CLASS, $this->model);
 
     }
 
     public function limitWords($user, $limit = 20){
-        $q = "SELECT * FROM words WHERE user_id = ? AND language_id = ? ORDER BY created_at DESC LIMIT ?";
+        $q = "SELECT DISTINCT * FROM words WHERE (user_id = ? OR user_id IN 
+            (SELECT DISTINCT user_id FROM groups_users WHERE group_id IN 
+                (SELECT group_id FROM groups_users WHERE user_id = ?)))
+                      AND language_id = ? ORDER BY created_at DESC LIMIT ?";
         $query = $this->con->prepare($q);
-        $query->execute(array($user->id, $user->language_id, $limit));
+        $query->execute(array($user->id, $user->id, $user->language_id, $limit));
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
 

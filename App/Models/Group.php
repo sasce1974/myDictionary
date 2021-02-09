@@ -53,7 +53,7 @@ class Group extends Model
             $query = $this->con->prepare("SELECT COUNT(id) FROM `groups` WHERE id = ? 
                                         AND owner_id = ?");
             $query->execute(array($group_id, Auth::id()));
-            if ($query->fetchColumn() === 1) return true;
+            if ($query->fetchColumn() == 1) return true;
             return false;
         }catch (PDOException $e){
             print $e->getMessage();
@@ -69,7 +69,7 @@ class Group extends Model
     }
 
     public function countryCities($country){
-        $query = "SELECT DISTINCT city FROM world_cities WHERE country = ? ORDER BY city";
+        $query = "SELECT DISTINCT city_ascii FROM world_cities WHERE country = ? ORDER BY city";
         $query = $this->con->prepare($query);
         $query->execute(array($country));
         return $query->fetchAll(PDO::FETCH_COLUMN);
@@ -174,9 +174,6 @@ class Group extends Model
         return $query->fetchColumn();
     }
 
-    public function invite($user_name, $email){
-
-    }
 
     public function makeInviteHash($group_id, $user_id, $hash){
 

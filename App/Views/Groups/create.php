@@ -131,7 +131,9 @@ include $base_page;
     }
 
     function populateCities(data) {
+        console.log(data);
         data = JSON.parse(data);
+
         let city = $("#city");
         let output = "";
         output = "<option>Choose City</option>";
