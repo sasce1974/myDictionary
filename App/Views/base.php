@@ -38,7 +38,9 @@ if(!Auth::check()){
     <link rel="stylesheet" href="/css/style.css?x=12354">
     <link rel="stylesheet" href="/css/loader.css?x=2">
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
+          integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu"
+          crossorigin="anonymous">
     <?php
     if(isset($additional_css)) print $additional_css;
     ?>
@@ -48,8 +50,8 @@ if(!Auth::check()){
 <div id="loader" class="loader-dual-ring"></div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light text-dark">
     <div><img alt="Logo" src="/images/logo_w.svg" width="70px" height="auto"><h3 id="top">MY DICTIONARY</h3></div>
-<!--    <a class="nav-link" href="/">Home</a>-->
-<!--    <a class="nav-link" href="/boards/1/students">Board 1</a> |-->
+    <a class="nav-link ml-auto" href="/">Home</a> |
+    <a class="nav-link" href="/groups/create">Create Group</a>
 <!--    <a class="nav-link" href="/boards/2/students">Board 2</a>-->
     <?php
         if(Auth::check()){

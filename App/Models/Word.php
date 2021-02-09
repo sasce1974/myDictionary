@@ -164,8 +164,8 @@ class Word extends Model
 
         if ($err) {
             http_response_code(500);
-            //throw new \Exception("Error retrieving info for \'$word\'");
-            return "cURL Error #:" . $err;
+            throw new \Exception("Error retrieving info for \'$word\'");
+            //return "cURL Error #:" . $err;
         } else {
             return $response;
         }

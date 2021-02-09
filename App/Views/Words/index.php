@@ -52,14 +52,14 @@ include $base_page;
                 </select>
                 <!--                <input class="form-control form-control-sm mr-0" type="text" name="newLanguage" placeholder="New language">-->
                 <div class="input-group-append">
-                    <button class="btn btn-primary btn-sm ml-0" type="submit"><i class="fas fa-plus"></i> Create</button>
+                    <button class="btn btn-primary btn-sm ml-0" type="submit"><i class="fas fa-plus fa-sm"></i> Create</button>
                 </div>
             </div>
         </form>
         <div class="border-top px-1">
             <div class="d-flex mt-2">
                 <h5 class="flex-grow-1">Your Groups</h5>
-                <a href="/groups/create" class="btn btn-sm btn-primary px-3" title="Create Group"><i class="fas fa-plus"></i> </a>
+                <a href="/groups/create" class="btn btn-sm btn-primary px-3" title="Create Group"><i class="fas fa-plus fa-sm"></i> </a>
             </div>
 
         <?php

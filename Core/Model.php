@@ -136,6 +136,14 @@ abstract class Model implements iModel, \Countable
         return count($this);
     }
 
+    public function first(){
+        return $this[0];
+    }
+
+    public function last(){
+        return $this[count($this)-1];
+    }
+
     function __destruct()
     {
         $this->con = null;

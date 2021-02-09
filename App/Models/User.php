@@ -14,7 +14,7 @@ class User extends Model
 {
     public $id;
     public $email;
-    private $password;
+    //private $password;
     public $name;
     public $language;
     public $language_id;
@@ -87,11 +87,20 @@ class User extends Model
         $name = filter_var($newUserData['name']);
         $query->execute(array($email, $safePassword, $name, $_SERVER['REMOTE_ADDR']));
         if($query->rowCount() === 1){
-            return true;
+            //return true;
+            return $this->con->lastInsertId();
         }
         return false;
     }
 
+
+    public function update(array $data){
+        $q = "UPDATE users SET email=?, name=?, phone=?, ip=? WHERE id=?";
+        $query = $this->con->prepare($q);
+        $r = $query->execute(array($data['email'], $data['name'], $data['phone'], $_SERVER['REMOTE_ADDR'], $this->id));
+        if($r && $query->rowCount() === 1) return true;
+        return false;
+    }
 
     public function checkIfEmailExist($email){
         $findUser = "SELECT id FROM users WHERE email = ?";
@@ -152,4 +161,12 @@ class User extends Model
         $this->init(Auth::user());
     }
 
+
+    public function saveInviteHash($hash=null){
+        $q = "UPDATE users SET group_invite_hash = ? WHERE id = ?";
+        $query = $this->con->prepare($q);
+        $query->execute(array($hash, $this->id));
+        if($query->rowCount() === 1) return true;
+        return false;
+    }
 }

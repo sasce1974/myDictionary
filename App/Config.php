@@ -41,6 +41,7 @@ class Config
 
                 $rows = explode("\n", $env);
                 foreach ($rows as $row) {
+                    if(trim($row) =="" || substr(trim($row), 0, 1) == '#') continue;
                     $row = explode("=", $row);
                     $config_array[trim($row[0])] = trim($row[1]);
                 }

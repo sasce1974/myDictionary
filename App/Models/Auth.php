@@ -164,15 +164,15 @@ class Auth extends Model
         $to = $user->email;
         $subject = "Password Reset for 3Delacto MyDictionary";
         $message = "<html><head><title>3Delacto MyDictionary Password Request</title></head><body><div style='text-align: center'>\r\n";
-        $message .= "<img style='vertical-align: middle;margin:auto;' src='https://www.3delacto.com/projects/classroom/japanese/logo.png' alt='logo' width=100 height='auto'>\r\n";
+        $message .= "<img style='vertical-align: middle;margin:auto;' src='https://www.dictionary.papucraft.com/images/logo_w.svg' alt='logo' width=100 height='auto'>\r\n";
         $message .= "<h3 style='color: darkblue;padding:1em;vertical-align: middle;border-radius: 6px'>Password reset requested for MyDictionary.</h3><br>\r\n";
         $message .= "<h4 style='background-color: darkblue;color:white;border-radius:6px'>" . $fullURL . "</h4> \r\n";
         $message .= "<p>Or if the link above is not working then use the following url: 
         <i>" . Config::getConfig('app.url') . "/reset/index.php?user=$urlHash</i></p>
         <hr><small>If you didn't requested the link from this message, please ignore it.</small><br><div style='background-color: darkblue;height: 2em'></div>\r\n";
         $message .= "</div></body></html>";
-        $headers = "From: 3Delacto MyDictionary <mydictionary@3delacto.com>" . "\r\n";
-        $headers .="Reply-To: info@3delacto.com" . "\r\n";
+        $headers = "From: 3Delacto MyDictionary <pasword-reset@dictionary.papucraft.com>" . "\r\n";
+        $headers .="Reply-To: pasword-reset@dictionary.papucraft.com" . "\r\n";
         $headers .="MIME-Version: 1.0" . "\r\n";
         $headers .="Content-Type: text/html; charset=UTF-8";
         mail($to,$subject,$message,$headers);

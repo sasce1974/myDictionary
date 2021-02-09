@@ -20,13 +20,13 @@ include $base_page;
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic3">Group Name</span>
                         </div>
-                        <input class="mr-0 form-control<?php if(isset($_SESSION['errors["group_name"]']) && !empty($_SESSION['errors["group_name"]'])) print ' is_invalid'; ?>"
+                        <input class="mr-0 form-control<?php if(isset($_SESSION['errors["name"]']) && !empty($_SESSION['errors["name"]'])) print ' is_invalid'; ?>"
                                aria-describedby="basic3" type="text" name="group_name"
-                               value="<?php isset($_GET['group_name']) ? print filter_var($_GET['group_name'], FILTER_SANITIZE_STRING) : null; ?>"
+                               value="<?php isset($group) ? print $group->name : null; ?>"
                                title="Insert Group Name" placeholder="Insert some memorable group name">
-                        <?php if(isset($_SESSION['errors["group_name"]']) && !empty($_SESSION['errors["group_name"]'])) { ?>
+                        <?php if(isset($_SESSION['errors["name"]']) && !empty($_SESSION['errors["name"]'])) { ?>
                             <div class="invalid-feedback">
-                                <strong><?php print $_SESSION['errors["group_name"]']; ?></strong>
+                                <strong><?php print $_SESSION['errors["name"]']; ?></strong>
                             </div>
                         <?php } ?>
                     </div>
@@ -91,7 +91,7 @@ include $base_page;
                     <label>About The Group</label>
                     <textarea class="form-control <?php if(isset($_SESSION['errors["about"]']) && !empty($_SESSION['errors["about"]'])) print 'is-invalid';?>" rows="5"
                               name="about" title="Insert any information about this team, to whom is intended, purpose..."
-                              placeholder="Insert any information about this team, to whom is intended, purpose..."><?php if(isset($_GET['about'])) print filter_var($_GET['about'], FILTER_SANITIZE_STRING); ?></textarea>
+                              placeholder="Insert any information about this team, to whom is intended, purpose..."><?php if(isset($group)) print $group->about; ?></textarea>
                     <?php if(isset($_SESSION['errors["about"]']) && !empty($_SESSION['errors["about"]'])) { ?>
                     <div class="invalid-feedback">
                         <strong><?php print $_SESSION['errors["about"]']; ?></strong>
@@ -99,15 +99,15 @@ include $base_page;
                     <?php } ?>
                 </div>
             </div>
-            <div class="row m-2 d-flex justify-content-center">
-                <button type="submit" class="btn btn-success float-left"><?php isset($group) ? print "Update" : print "Create"; ?></button>
+            <div class="row m-2">
+                <button type="submit" class="btn btn-success"><?php isset($group) ? print "Update" : print "Create"; ?></button>
             </div>
         </form>
 
         <?php if(isset($group)){ ?>
-        <form class="float-right mr-3" action="/groups/<?php echo $group->id; ?>/destroy', $user->id)}}" method="post">
-<!--                    <input type="hidden" name="token" value="--><?php //isset($token) ? print $token : null; ?><!--">-->
-            <button type="submit" class="btn btn-danger" onclick="return confirm('Do you want to delete the group? This action can not be undone!');"
+        <form class="" action="/groups/<?php echo $group->id; ?>/destroy" method="post">
+            <input type="hidden" name="token" value="<?php isset($token) ? print $token : null; ?>">
+            <button type="submit" class="btn btn-danger ml-auto" style="transform: translate(-20px, -55px)" onclick="return confirm('Do you want to delete the group? This action can not be undone!');"
                     title="Delete Group">Delete
             </button>
         </form>
@@ -116,6 +116,15 @@ include $base_page;
     </div>
 </div>
 <script>
+    $(window).on('load', function () {
+        let country = "<?php if(isset($group)) print $group->country; ?>"; //$("#country").html();
+        //console.log(country);
+        if(country !== ""){
+            getCities();
+        }
+    });
+
+
     function getCities() {
         const country = $("#country").val();
         $.get('/groups/cities', {'country': country}, populateCities);
@@ -127,7 +136,9 @@ include $base_page;
         let output = "";
         output = "<option>Choose City</option>";
         for(let i = 0; i < data.length; i++){
-            output += "<option value='" + data[i] + "'>" + data[i] + "</option>";
+            let chosen = "";
+            if(data[i] == "<?php if(isset($group)) print $group->city; ?>") chosen = 'selected';
+            output += "<option value='" + data[i] + "'" + chosen + ">" + data[i] + "</option>";
         }
         $("#citi_block").removeClass('d-none');
         city.html(output);

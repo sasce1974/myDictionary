@@ -10,7 +10,8 @@
     "require": {
         "php": ">=7.2",
         "ext-pdo": "*",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "phpmailer/phpmailer": "^6.2"
     },
     "autoload": {
         "psr-4": {
