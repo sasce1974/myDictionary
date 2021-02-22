@@ -8,6 +8,7 @@ use PDO, PDOException;
 class DB_connection
 {
     private static $instance = null;
+    private static $calls = 0;
 
     private $con;
 
@@ -25,6 +26,8 @@ class DB_connection
     public static function getCon(){
         try{
             $db = self::getInstance();
+            self::$calls++;
+//var_dump(debug_backtrace());
             $db->con = new PDO('mysql:host=' . Config::getConfig('db_host') .
             ';dbname=' . Config::getConfig('db_name'),
             Config::getConfig('db_user'),
@@ -35,5 +38,9 @@ class DB_connection
         }catch (PDOException $e){
             print $e->getMessage();
         }
+    }
+
+    public static function getCalls(){
+        return self::$calls;
     }
 }

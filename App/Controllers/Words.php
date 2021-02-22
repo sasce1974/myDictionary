@@ -2,21 +2,20 @@
 
 
 namespace App\Controllers;
+
 use App\Models\Auth;
+use App\Models\Group;
 use App\Models\Language;
 use App\Models\User;
 use App\Models\Word;
 use Core\Controller;
+use Core\DB_connection;
 use Core\View;
-use http\Client;
+//use http\Client;
 
 
 class Words extends Controller
 {
-    /*public function sharedAction(){
-        $word = new Word();
-        return $word->getSharingUsersId();
-    }*/
 
     public function indexAction(){
         if(Auth::check()){
@@ -26,25 +25,27 @@ class Words extends Controller
             //throw new \Exception("User Not Authenticated", 403);
         }
         $languages = $u->languages();
+        $group = new Group();
+        $featured_groups = $group->featured();
 
         $lan = new Language();
         //$word = new Word();
-
+//print DB_connection::getCalls();
         //var_dump($u->groups()); exit();
         View::render('Words/index.php', [
             'user'=>$u,
             //'words'=>$word->limitWords($u, 15),
             'languages'=>$languages,
-            'all_lang'=>$lan->all(['id', 'name']),
-            'chosen_language'=>$u->getLanguage()
+            'all_lang'=> $lan->all(['id', 'name']),
+            'chosen_language'=>$u->getLanguage(),
+            'featured_groups'=> $featured_groups
         ]);
     }
 
     public function mostRecentWords(){
-        $user = Auth::user();
         $limit = filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT);
         $word = new Word();
-        print json_encode($word->limitWords($user, $limit));
+        print json_encode($word->limitWords($limit));
     }
 
     /**
@@ -55,6 +56,8 @@ class Words extends Controller
         $word = new Word();
         if(!empty($string)){
             print json_encode($word->search($string));
+        }else{
+            print json_encode($word->limitWords(20));
         }
     }
 

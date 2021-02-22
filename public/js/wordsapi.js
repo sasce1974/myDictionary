@@ -8,14 +8,16 @@ function wordDetails(data) {
     let output = "<span class='close-box' onclick='closeWordInfo()'>x</span>";
     if(data.length > 0) {
         data = JSON.parse(data);
-
-        output += "<h4 class='text-info font-weight-bold mx-2'>" + data.word + "</h4>";
-        if (data.results[0].partOfSpeech != undefined) output += "<b><em>[" + data.results[0].partOfSpeech + "]</em></b>";
-        output += "<div class='w-i-inner'>";
-
+        console.log(data);
+        if (data.word != undefined) {
+            output += "<h4 class='text-info font-weight-bold mx-2'>" + data.word + "</h4>";
+        }
         //output = iterate(data, output);
 
         if (data.results != undefined) {
+
+            if (data.results[0].partOfSpeech != undefined) output += "<b><em>[" + data.results[0].partOfSpeech + "]</em></b>";
+            output += "<div class='w-i-inner'>";
 
             data.results.forEach(function (item, index) {
                 if (item.antonyms != undefined) output += "<b>Antonyms:</b> " + item.antonyms[0] + "&#09;";
@@ -43,6 +45,10 @@ function wordDetails(data) {
                 }
                 output += "<hr class='my-0 py-0'>";
             });
+        }else if(data.message != undefined){
+            output += data.message;
+        }else{
+            output += "<p>We apologise, there are no additional information for this word</p>";
         }
 
         output += "</div>";

@@ -1,32 +1,3 @@
-/*
-function sortTable(a) {
-    const start = Date.now();
-    var rows, switching, i, x, y, shouldSwitch;
-    switching = true;
-    while (switching) {
-        switching = false;
-        rows = table.rows;
-        for (i = 2; i < (rows.length - 1); i++) {
-            shouldSwitch = false;
-            //x = rows[i].getElementsByTagName("TD")[a];
-            //y = rows[i + 1].getElementsByTagName("TD")[a];
-            x = rows[i].cells[a];
-            y = rows[i + 1].cells[a];
-            if (x.innerHTML > y.innerHTML) {
-                shouldSwitch = true;
-                break;
-            }
-        }
-        if (shouldSwitch) {
-            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-            switching = true;
-        }
-    }
-    console.log(`Sorting takes: ${Date.now()-start}ms`);
-    loader.style.display = "none";
-    table.style.filter = "none";
-}
-*/
 
 const table = document.getElementById("myTable");
 const loader = document.getElementById('loader');
@@ -51,30 +22,7 @@ function errorMessage(xhr, status, error) {
     loader.style.display = "none";
     table.style.filter = "none";
 }
-/*
-function recentWords(limit) {
-    $.get('/words/mostRecentWords', {'limit':limit}, fillRows).fail(errorMessage);
-}
 
-function fillRows(data) {
-console.log(data);
-    let tbody = document.getElementById('tbody');
-    tbody.innerHTML = "";
-    let body = "";
-    if(data.length > 0){
-        data = JSON.parse(data);
-        for(let i=0; i < data.length; i++) {
-            body += "<tr class='bor_bottom' style='table-row' onclick='getRow(" + data[i].id + ")'>" +
-                "<td>" + data[i].lang1.replace(/^./, data[i].lang1[0].toUpperCase()) + "</td><td>" +
-                 data[i].lang2.replace(/^./, data[i].lang2[0].toUpperCase()) +
-                "</td><td class='text-danger h4'><a href='words/" + data[i].id + "/delete'>x</a></td>" +
-                "</tr> \n";
-        }
-        tbody.innerHTML = body;
-    }
-    loader.style.display = "none";
-    table.style.filter = "none";
-}*/
 
 function searchWord() {
     globalTimeout = null;
@@ -91,7 +39,7 @@ function fillTableRows(data) {
     tbody.innerHTML = "";
     let nlang1, nlang2;
 
-    if(data.length > 0 && word !== ""){
+    if(data.length > 0){
         data = JSON.parse(data);
         document.getElementById('count_rows').innerHTML = data.length + " record(s) found";
         for(let i=0; i < data.length; i++) {
@@ -119,10 +67,21 @@ function fillTableRows(data) {
             nlang1 = newXCell.join(" ");
             nlang2 = newYCell.join(" ");
 
-            body += "<tr class='bor_bottom' style='table-row' onclick='getRow(" + data[i].id + ")'>" +
+            body += "<tr class='bor_bottom' style='table-row'>" +
                 "<td>" + nlang1 + "</td>" +
                 "<td>" + nlang2 +  "<span class='info-mark' onclick='getTranslation(\"" + data[i].lang2 + "\")'>?</span>" +
-                "</td><td class='text-danger h4'><a href='words/" + data[i].id + "/delete'>x</a></td>" +
+                "</td><td style='white-space: nowrap'>";
+
+            if(auth_id == data[i].user_id) {
+                body += "<i class='fas fa-edit fa-sm mr-3' onclick='getRow(" + data[i].id + ")'></i>" +
+                    "<a onclick='deleteWord(" + data[i].id + ")' " +
+                    "href='#'><i class='fas fa-times fa-sm text-danger'></i>" +
+                    "</a>";
+            }else{
+                body += "<span class='p-1 rounded' style='background:rgba(255, 255, 0, 0.6);font-size:50%;white-space: nowrap'>From group</span>";
+            }
+
+            body += "</td>" +
                 "</tr>";
         }
         tbody.innerHTML = body;
@@ -134,62 +93,6 @@ function fillTableRows(data) {
     table.style.filter = "none";
 
 }
-
-/*window.onload = function () {
-    //check if at least one dictionary is set
-    //runLoader();
-    //recentWords(15);
-};*/
-
-/*function search(){
-    globalTimeout = null;
-    let word, rows, x,y, i, z;
-    word = document.getElementById('search').value.trim();
-    let patt = new RegExp(word, "i");
-    rows = table.rows;
-    for(i=2; i < rows.length; i++){
-        x = rows[i].getElementsByTagName("TD")[0];
-        const initial_x = x.innerText;
-        y = rows[i].getElementsByTagName("TD")[1];
-        const initial_y = y.innerText;
-        if(word.length > 0) {
-            if (patt.test(x.innerHTML) || patt.test(y.innerHTML)) {
-                rows[i].style.display = 'table-row';
-
-                let ax = x.innerText.split(" ");
-                let ay = y.innerText.split(" ");
-
-                let newXCell = [];
-                let newYCell = [];
-                for(z=0;z<ax.length;z++){
-                    if(patt.test(ax[z])){
-                        ax[z] = `<span style='color:greenyellow'>` + ax[z] + `</span>`;
-                    }
-                    newXCell.push(ax[z]);
-                }
-
-                for(z=0;z<ay.length;z++){
-                    if(patt.test(ay[z])){
-                        ay[z] = `<span style='color:greenyellow'>` + ay[z] + `</span>`;
-                    }
-                    newYCell.push(ay[z]);
-                }
-
-                x.innerHTML = newXCell.join(" ");
-                y.innerHTML = newYCell.join(" ");
-            } else {
-                rows[i].style.display = 'none';
-            }
-        }else{
-            x.innerText = initial_x;
-            y.innerText = initial_y;
-            rows[i].style.display = 'table-row';
-        }
-    }
-}*/
-
-
-
 
 function sortTable(col){
     //const start = Date.now();

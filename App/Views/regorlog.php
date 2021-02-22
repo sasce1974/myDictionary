@@ -41,7 +41,8 @@ if (Auth::check()) {
     <meta name="twitter:url" content="https://dictionary.papucraft.com">
     <meta name="twitter:card"
           content="Multi language dictionary to English dictionary - Personal and Team/Classroom shared dictionary">
-<!--    <link rel="icon" type="image/png" href="https://3delacto.com/favicon.ico">-->
+<!--    <link rel="icon" type="image/svg+xml" href="/images/logo_w.svg.">-->
+<!--    <link rel="alternate icon" type="image/png" href="/images/favicon.ico">-->
     <link rel="icon" type="image/png" href="/images/favicon_d.png">
 
     <title>My Dictionary - Let's Language Together</title>
@@ -109,7 +110,7 @@ if (Auth::check()) {
                     <span class="subheading">Let's Language Together</span>
                 </div>
 
-                <div class="card mt-5 mx-auto ml-0 mr-0" style="background: rgba(250, 250, 250, 0.7);">
+                <div class="card mt-3 mb-4 ml-0 mr-0" style="background: rgba(250, 250, 250, 0.7);">
                     <!--          <div class="card-header">-->
                     <!--            Login to <b>MY DICTIONARY</b>-->
                     <!--          </div>-->
@@ -153,43 +154,18 @@ if (Auth::check()) {
                     </div>
 
 
-                    <div class="card-body" style="">
+                    <div class="card-body">
                         <div class="m-3">
-                            <form class="row m-0" id="loginForm" method="POST" action="/login/new">
-                                <input type="hidden" name="init"
-                                       value="<?php if (isset($_SESSION['token'])) print $_SESSION['token']; ?>">
-                                <div class="form-group col-md-6">
-                                    <div class="input-group">
-                                        <!--<div class="input-group-prepend">
-                                          <span class="input-group-text" id="basic1">E-mail</span>
-                                        </div>-->
-                                        <input class="form-control form-control-sm" aria-describedby="basic1" id="email"
-                                               name="email" type="email" placeholder="Username/Email" required>
-                                    </div>
-                                    <span id="info_login"></span>
-                                    <small class="errorFeedback errorSpan" id="emailError">E-mail is required</small>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <div class="input-group">
-                                        <!--<div class="input-group-prepend">
-                                          <span class="input-group-text" id="basic2">Password</span>
-                                        </div>-->
-                                        <input class="form-control form-control-sm" aria-describedby="basic2"
-                                               id="password" name="password" type="password" placeholder="Password"
-                                               required>
-                                    </div>
-                                    <small class="errorFeedback errorSpan" id="passwordError">Password required</small>
-                                </div>
-                                <div class="mx-auto">
-                                    <button class="btn btn-success" type="submit" id="submit" name="submit">Login
-                                    </button>
-                                </div>
-                            </form>
-<!--                            <hr>-->
-<!--                            <p class="card-text text-right mt-0">-->
-                                <!--                  Forgotten password? Click <a class="card-link" href="/reset">here</a> <br>-->
-<!--                                Or sign up for free account <a class="card-link" href="/register">here</a>-->
-<!--                            </p>-->
+
+                            <?php
+
+                            if($_SERVER['REQUEST_URI'] == '/login'){
+                                include_once "Login/_login_form.php";
+                            }elseif($_SERVER['REQUEST_URI'] == '/register') {
+                                include_once "Register/_register_form.php";
+                            }
+                            ?>
+
                         </div>
                     </div>
                 </div>

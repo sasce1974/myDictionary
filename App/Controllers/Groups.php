@@ -92,8 +92,13 @@ class Groups extends Controller
         $id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
         $group = new Group();
         $g = $group->find($id);
-        View::render('/Groups/show.php', ['group'=>$group]);
+        if($g){
+            View::render('/Groups/show.php', ['group'=>$g]);
+        } else{
+            throw new \Exception("Group not found", 404);
+        }
     }
+
 
     public function editAction(){
         $group_id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
@@ -101,7 +106,6 @@ class Groups extends Controller
         $group = new Group();
         if($group->isOwner($group_id)){
             $group = $group->find($group_id);
-            //var_dump($group); exit();
 
             View::render('/Groups/create.php', ['group'=> $group, 'countries'=>$group->countries()]);
         }else{
@@ -194,8 +198,16 @@ class Groups extends Controller
         $group = new Group();
         $myGroup = $group->find($group_id);
 
+        //Check if auth user is owner of this group
         if($group->owner_id !== Auth::id()) {
             throw new \Exception( "Access Denied", 403);
+        }
+
+        //Check if there are no more than 20 members invited
+        if(count($group->invitedMembers()) > 20){
+            $_SESSION['error'][] = "To many invitations pending. Wait till users accept sent invitations for this group.";
+            header("Location: /groups/$group_id/show");
+            exit(403);
         }
         $name = filter_input(INPUT_GET, 'name', FILTER_SANITIZE_STRING);
         $email = filter_input(INPUT_GET, 'email', FILTER_SANITIZE_EMAIL);
@@ -284,5 +296,30 @@ class Groups extends Controller
         }
         header("Location: /");
         exit();
+    }
+
+    public function destroyMemberAction(){
+
+        $group_id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
+        $user_id = filter_var($this->route_params['aid'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
+
+        if($_POST['token'] !== $_SESSION['token']){
+            $_SESSION['error'][] = "Wrong parameters sent. User not removed.";
+            header("Location: /groups/$group_id/show");
+            exit(500);
+        }
+
+        $group = new Group();
+        $group = $group->find($group_id);
+        if($group){
+            if($group->removeUser($user_id)){
+                $_SESSION['message'] = "Member removed from the group";
+                header("Location: /groups/$group_id/show");
+                exit(200);
+            }
+        }
+        $_SESSION['error'][]= "There was some error. User not removed. Please try again later.";
+        header("Location: /groups/$group_id/show");
+        exit(500);
     }
 }

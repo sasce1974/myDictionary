@@ -31,19 +31,14 @@ class Word extends Model
     /**
      * returns user - relationship
      *
-     * @return array
+     * @return \App\Models\User|false
      */
     public function user(){
         $user = new User();
-        return $user->where('id', $this->user_id);
+        return $user->find($this->user_id);
+        //return $user->where('id', $this->user_id);
     }
-
-    /*public function getSharingUsersId(){
-        $q = "SELECT DISTINCT user_id FROM groups_users WHERE group_id IN (SELECT group_id FROM groups_users WHERE user_id = 1)";
-        $query = $this->con->query($q);
-        //$query->execute(array(Auth::id()));
-        var_dump($query->fetchAll(PDO::FETCH_COLUMN));
-    }*/
+    
 
     /**
      * return array of instances of word class for the current user
@@ -52,25 +47,26 @@ class Word extends Model
      * @return array
      */
     public function search($string){
-        $user_id = Auth::id();
+        $user = Auth::user();
         $q = "SELECT * FROM words WHERE (lang1 LIKE ? OR lang2 LIKE ?) AND 
             (user_id = ? OR user_id IN 
-            (SELECT DISTINCT user_id FROM groups_users WHERE group_id IN 
-            (SELECT group_id FROM groups_users WHERE user_id = ?))) 
-            ORDER BY created_at DESC LIMIT 150";
-        $query = $this->con->prepare($q);
-        $query->execute(array("%$string%", "%$string%", $user_id, $user_id));
+                (SELECT DISTINCT user_id FROM groups_users WHERE group_id IN 
+                    (SELECT group_id FROM groups_users WHERE user_id = ?))) 
+            AND language_id = ? ORDER BY created_at DESC LIMIT 150";
+        $query = $this->con()->prepare($q);
+        $query->execute(array("%$string%", "%$string%", $user->id, $user->id, $user->language_id));
         //$query = $this->con->query($q);
         return $query->fetchAll(PDO::FETCH_CLASS, $this->model);
 
     }
 
-    public function limitWords($user, $limit = 20){
-        $q = "SELECT DISTINCT * FROM words WHERE (user_id = ? OR user_id IN 
-            (SELECT DISTINCT user_id FROM groups_users WHERE group_id IN 
-                (SELECT group_id FROM groups_users WHERE user_id = ?)))
-                      AND language_id = ? ORDER BY created_at DESC LIMIT ?";
-        $query = $this->con->prepare($q);
+    public function limitWords($limit = 20){
+        $user = Auth::user();
+        $q = "SELECT * FROM words WHERE (user_id = ? OR user_id IN 
+                (SELECT DISTINCT user_id FROM groups_users WHERE group_id IN 
+                    (SELECT group_id FROM groups_users WHERE user_id = ?)))
+                AND language_id = ? ORDER BY created_at DESC LIMIT ?";
+        $query = $this->con()->prepare($q);
         $query->execute(array($user->id, $user->id, $user->language_id, $limit));
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
@@ -84,7 +80,7 @@ class Word extends Model
         $lang1 = ucfirst($lang1);
         $lang2 = ucfirst($lang2);
         $q="INSERT INTO words (lang1, lang2, user_id, language_id) VALUES (?, ?, ?, ?)";
-        $query = $this->con->prepare($q);
+        $query = $this->con()->prepare($q);
         if($query->execute(array($lang1, $lang2, $user->id, $user->language_id))){
             if($query->rowCount() === 1) return true;
         }
@@ -102,7 +98,7 @@ class Word extends Model
     public function update($id, $newData){
         $user = Auth::user();
         $q="UPDATE words SET lang1=?, lang2=? WHERE id = ? AND user_id = ?";
-        $query = $this->con->prepare($q);
+        $query = $this->con()->prepare($q);
         if($query->execute(array($newData['lang1'], $newData['lang2'], $id, $user->id))){
             if($query->rowCount() === 1) return true;
         }
@@ -118,7 +114,7 @@ class Word extends Model
      */
     public function delete($id){
         $q = "DELETE FROM words WHERE user_id = ? AND id = ?";
-        $query = $this->con->prepare($q);
+        $query = $this->con()->prepare($q);
         return $query->execute(array(Auth::id(), $id));
     }
 
@@ -139,13 +135,13 @@ class Word extends Model
     }*/
 
     public function countApiCalls(){
-        $query = $this->con->query("SELECT COUNT(id) FROM word_api_calls
+        $query = $this->con()->query("SELECT COUNT(id) FROM word_api_calls
             WHERE created_at BETWEEN DATE_SUB(NOW(), INTERVAL 1 day) AND NOW()");
         return $query->fetchColumn();
     }
 
     public function saveApiCall($word){
-        $query = $this->con->prepare("INSERT INTO word_api_calls (word, user) VALUES (?,?)");
+        $query = $this->con()->prepare("INSERT INTO word_api_calls (word, user) VALUES (?,?)");
         return $query->execute(array($word, Auth::id()));
     }
 

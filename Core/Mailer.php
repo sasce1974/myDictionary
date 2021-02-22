@@ -47,7 +47,7 @@ class Mailer
             error_log('Message could not be sent. Error: ' . $this->mail->ErrorInfo);
             return false;
         } else {
-            $_SESSION['message'] = "Invitation sent";
+            $_SESSION['message'] = "Message sent";
             return true;
         }
     }

@@ -23,7 +23,9 @@ class Error
      */
     public static function errorHandler($level, $message, $file, $line)
     {
+
         if (error_reporting() !== 0) {  // to keep the @ operator working
+
             throw new \ErrorException($message, 0, $level, $file, $line);
         }
     }
@@ -51,6 +53,12 @@ class Error
             echo "<p>Message: '" . $exception->getMessage() . "'</p>";
             echo "<p>Stack trace:<pre>" . $exception->getTraceAsString() . "</pre></p>";
             echo "<p>Thrown in '" . $exception->getFile() . "' on line " . $exception->getLine() . "</p>";
+
+            //to use xdebug message and enable exception trace with xdebug...
+            //ini_set('xdebug.show_exception_trace', 'on');
+            //$xdebug_message = xdebug_get_function_stack();
+            //var_dump($xdebug_message);
+
         } else {
             $log = dirname(__DIR__) . '/logs/' . date('Y-m-d') . '.txt';
             ini_set('error_log', $log);
@@ -69,7 +77,7 @@ class Error
             }
             View::render("error.php", [
                 'message'=>$message,
-                'code'=>$code
+                'code'=>$code,
             ]);
         }
     }

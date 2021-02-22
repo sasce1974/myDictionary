@@ -11,7 +11,8 @@ use Core\View;
 class Register extends Controller
 {
     public function indexAction(){
-        View::render('/Register/index.php');
+//        View::render('/Register/index.php');
+        View::render('/regorlog.php');
     }
 
     public function store(){
@@ -67,6 +68,7 @@ class Register extends Controller
                 unset($_SESSION["formAttempt"]);
                 $_SESSION['message'] = "User {$name} registered. Please Log in to continue.";
                 header("Location: /login");
+                //todo send activate account email?
                 exit (200);
             }else{
                 error_log("Problem with the registration: {$email}");

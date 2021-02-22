@@ -25,8 +25,8 @@ try {
 
     <!--<link rel="stylesheet" href="styles/all.css">-->
     <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="css/style.css?x=3">
-    <link href="css/login_form.css?x=1" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?x=4">
+    <link href="css/login_form.css?x=2" rel="stylesheet">
 
     <script src="js/jquery-3.3.1.min.js"></script>
 

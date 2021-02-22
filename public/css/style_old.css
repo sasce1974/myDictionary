@@ -1,0 +1,238 @@
+body{
+    /*box-sizing: border-box;*/
+    margin: 0;
+    padding: 0;
+    font-family: 'Spartan', sans-serif;
+    /*background: lightblue url("https://i.pinimg.com/originals/3c/24/46/3c24462450c2a902bf7e18f3d9aada81.jpg");*/
+    /*background: #001B3E url("/images/3436600.jpg") fixed;*/
+    background: #001B3E;
+    background-size: cover;
+    /*background-attachment: fixed;*/
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*justify-content: center;*/
+    min-height: 100vh;
+    color: #ffffff;
+    font-size: 1rem;
+    perspective: 1000px;
+}
+#head{
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    padding-right: 5px;
+    border-bottom: 5px solid white;
+    border-image: linear-gradient(to right, white, rgba(0, 0, 0, 0)) 5 0;
+}
+#head h1{
+    margin: 0 1rem;
+}
+#head input, thead tr td form input, #head select{
+    /*height: 2em;*/
+    /*background-color: rgba(0,0,139,0.5);*/
+    border: 1px solid #fff;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 100%;
+    margin-left: auto;
+    margin-right: 20px;
+    padding: 5px;
+    min-width: 10em;
+}
+#head div, #head form{
+    display: inline-flex;
+    flex-direction: row;
+}
+
+#head div img{
+
+}
+
+form button{
+    /*padding: 5px 15px;*/
+    /*font-size: 80%;*/
+    /*color: #fff;*/
+    /*background: none;*/
+    /*border: 1px solid white;*/
+    /*border-radius: 5px;*/
+    /*margin-left: 10px;*/
+    /*min-width: 7em;*/
+    /*text-align: center;*/
+}
+form{
+    /*display: inline-flex;*/
+    /*flex-direction: row;*/
+    /*width: 100%;*/
+    /*padding: 5px 0;*/
+
+}
+form input{
+    /*width: 100%;*/
+    /*margin-right: 5px;*/
+}
+
+#head input:focus{
+    outline: none;
+}
+main{
+    /*display: flex;*/
+    /*flex-direction: column;*!*/
+    /*align-self: center;*/
+    /*min-width: 400px;*/
+    max-width: 1440px;
+    /*margin: auto;*/
+
+
+    /*border: 2px solid white;*/
+}
+
+ul{
+    list-style: none;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+li{
+    margin: 0.5rem;
+}
+
+a{
+    text-decoration: none;
+    color: unset;
+    transition: all ease 1s;
+
+}
+a:hover{
+    color: yellow;
+    text-shadow: 0 0 5px white;
+}
+table {
+    text-align: left;
+    /*border-collapse: collapse;*/
+    /*background-color: rgba(0,0,139,0.5);*/
+    /*padding: 5px;*/
+    /*filter: blur(5px);*/
+}
+#headRow{
+    color: #00008b;
+    background: rgba(255,255,255,0.8);
+    text-align: center;
+    font-weight: 600;
+}
+th span{
+    font-size: 110%;
+}
+th span:hover{
+    cursor: pointer;
+}
+
+tbody tr{
+    transition: all ease 0.2s;
+}
+td:nth-child(3){
+    text-align: center;
+}
+
+tbody tr:hover{
+    background-color: darkgreen;
+}
+
+td{
+    /*border-bottom: 1px solid white;*/
+    /*padding-right: 1rem;*/
+}
+td a{
+    font-size: 70%;
+}
+td a:hover{
+    color: red;
+}
+#top{
+    display: inline-flex;
+    /*flex-direction: row;*/
+    /*align-items: center;*/
+    margin: 0 20px;
+
+
+    align-self: center;
+}
+#logo{
+    /*margin-right: 1em;*/
+}
+i{
+    /*font-size: 130%;*/
+}
+i:hover{
+    color:white;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: darkblue;
+}
+
+.info-mark{
+    border-radius: 50%;
+    border: 2px solid darkblue;
+    /*background-color: cornflowerblue;*/
+    color: darkblue;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: x-small;
+    padding: 2px 5px;
+}
+
+#word-info{
+    position: sticky;
+    display: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /*max-width: 50%;*/
+    /*max-height: 50vh;*/
+    height: 40vh;
+    background-color: rgb(200,200,200);
+    background-color: rgba(255,255,255, 0.9);
+    color:#444;
+    z-index: 1000;
+    /*border-radius: 10px;*/
+    box-shadow: 0 0 10px black;
+    padding: 6px;
+    overflow: hidden;
+}
+#word-info h4{
+    border-radius: 5px;
+    background-color: #555;
+    padding: 0 3px;
+    display: inline-block;
+}
+#word-info .w-i-inner{
+    height: 32vh;
+    /*height: inherit;*/
+    overflow-y: auto;
+    border-top: 1px solid #444;
+}
+
+.close-box{
+    float: right;
+    margin: 5px;
+    display: inline-block;
+    color: white;
+    background-color: #444;
+    border-radius: 5px;
+    padding-right: 7px;
+    padding-left: 7px;
+    cursor: pointer;
+}
+
+.close-box:hover{
+    color: #444;
+    background-color: #bbb;
+    border: 1px solid #444;
+}
+
+@media only screen and (max-width: 700px) {
+    #head{
+        display: block;
+        padding: 10px;
+    }
+    #head input{
+        width: 100%;
+    }
+}

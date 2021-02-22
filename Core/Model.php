@@ -23,13 +23,13 @@ abstract class Model implements iModel, \Countable
     protected $con = null;
 
 
-
     /**
      * Model constructor.
      *
      * Create table name, then Initiate object of this model if object data is provided in argument
      *
      * @param null $object
+     * @throws \ReflectionException
      */
     public function __construct($object = null)
     {
@@ -38,7 +38,7 @@ abstract class Model implements iModel, \Countable
             //$this->table = lcfirst(get_class($this)) . 's'; // table name as Model class name + 's'
         }
         $this->model = get_class($this);
-        $this->con = DB_connection::getCon();
+        //$this->con = DB_connection::getCon();
         if($object) $this->init($object);
 
     }
@@ -59,7 +59,8 @@ abstract class Model implements iModel, \Countable
      *
      * @return mixed
      */
-    protected static function getDB()
+    //protected static function getDB()
+    protected function con()
     {
         return DB_connection::getCon();
     }
@@ -79,7 +80,7 @@ abstract class Model implements iModel, \Countable
         try {
             $column = $column ? implode(", ", $column) : "*";
             $q = "SELECT $column FROM $this->table";
-            $query = $this->con->query($q);
+            $query = $this->con()->query($q);
 
             return $query->fetchAll(PDO::FETCH_CLASS, $this->model);
         }catch (PDOException $e){
@@ -91,8 +92,8 @@ abstract class Model implements iModel, \Countable
     function some($limit){
         try {
             $q = "SELECT * FROM $this->table LIMIT ?";
-            $query = $this->con->prepare($q);
-            $query->execute(array($limit));
+            $query = $this->con()->prepare($q);
+            $query->execute(array((int)$limit));
 
             return $query->fetchAll(PDO::FETCH_CLASS, $this->model);
         }catch (PDOException $e){
@@ -106,27 +107,51 @@ abstract class Model implements iModel, \Countable
      *
      * @param $id
      * @return $this | false
+     * @throws \Exception
      */
     function find($id){
-        $q = "SELECT * FROM $this->table WHERE id = ?";
+        //check if column 'id' exist in the table
+        $test_q = $this->con()->query("SHOW COLUMNS FROM $this->table LIKE 'id'");
+        if(!$test_q->rowCount()) throw new \Exception("Column 'id' not found in table $this->table");
+
+        $q = "# noinspection SqlResolve @ column/\"id\" 
+        SELECT * FROM $this->table WHERE id = ?";
         //$query = $this->con->query("SELECT * FROM $this->table WHERE id = $id");
-        $query = $this->con->prepare($q);
+        $query = $this->con()->prepare($q);
         $query->execute(array($id));
-        if($query->rowCount() !== 1) return false;
+        if ($query->rowCount() !== 1) return false;
         $query->setFetchMode(PDO::FETCH_CLASS, $this->model);
         $model = $query->fetch();
         $this->init($model);
-        //var_dump($this); exit();
+
         return $this;
     }
 
     function where($item, $value){
+
         $item = filter_var($item, FILTER_SANITIZE_STRING);
+        $test_q = $this->con()->query("SHOW COLUMNS FROM $this->table LIKE '$item'");
+        if(!$test_q->rowCount()) throw new \Exception("Column $item not found in table $this->table");
+
         $q = "SELECT * FROM $this->table WHERE $item = ? LIMIT 150";
-        $query = $this->con->prepare($q);
+        $query = $this->con()->prepare($q);
         $query->execute(array($value));
         return $query->fetchAll(PDO::FETCH_CLASS, $this->model);
     }
+
+
+    function countWhere($item, $value){
+
+        $item = filter_var($item, FILTER_SANITIZE_STRING);
+        $test_q = $this->con()->query("SHOW COLUMNS FROM $this->table LIKE '$item'");
+        if(!$test_q->rowCount()) throw new \Exception("Column $item not found in table $this->table");
+
+        $q = "SELECT COUNT(*) FROM $this->table WHERE $item = ?";
+        $query = $this->con()->prepare($q);
+        $query->execute(array($value));
+        return $query->fetchColumn();
+    }
+
 
     public function toArray(){
         return (array) $this;
@@ -148,4 +173,17 @@ abstract class Model implements iModel, \Countable
     {
         $this->con = null;
     }
+
+
+    /**
+     * Handle dynamic static method calls into the model.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    /*public static function __callStatic($method, $parameters)
+    {
+        return (new static)->$method(...$parameters);
+    }*/
 }

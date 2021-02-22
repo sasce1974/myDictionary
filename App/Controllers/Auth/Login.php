@@ -13,7 +13,8 @@ class Login extends Controller
 {
 
     public function indexAction(){
-        View::render('Login/index.php');
+//        View::render('Login/index.php');
+        View::render('/regorlog.php');
     }
 
 
