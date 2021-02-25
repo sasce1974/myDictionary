@@ -1,4 +1,6 @@
-
+            <p class="mt-0 mb-1">
+                Register new account. It is FREE!
+            </p>
             <form class="m-0" id="newUserForm" method="POST" action="/register/store">
                 <input type="hidden" name="init" value="<?php print $_SESSION['token'];  ?>">
                 <div class="form-group">

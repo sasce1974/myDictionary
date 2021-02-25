@@ -25,7 +25,6 @@ if($user_words < 100){
                 <span class="text-muted d-block mb-2 text-uppercase">user profile</span>
                 <h4 class="mb-0"><?php echo $user->name; ?></h4>
 
-
                 <div class="progress-wrapper text-center mt-3">
     <!--                    <strong class="text-danger text-center d-block mb-2">USER REQUESTED ACCOUNT DELETION <br> $diff AGO</strong>
                     <form action="../../controllers/users/update_user.php" method="post">
@@ -42,14 +41,16 @@ if($user_words < 100){
             <?php if(isset($user->about) && !empty($user->about)){ ?>
                 <div class="p-4">
                     <strong class="text-muted d-block mb-2">About</strong>
-                    <span><?php echo $user->about; ?></span>
+                    <span><?php echo nl2br($user->about); ?></span>
                 </div>
             <?php } ?>
                 <div class="p-2 text-left">
                     <strong class="text-muted d-block mb-2">My groups</strong>
                     <?php
                     foreach ($user->myGroups() as $group){
-                        print "<div class='border-bottom'><em><a href='/groups/$group->id/show'>$group->name</a></em>, <small>- {$group->countMembers()} member(s)</small></div>";
+                        print "<div class='border-bottom'><em><a href='/groups/$group->id/show'>
+                        $group->name</a></em>, <small>- {$group->countMembers()} member(s)
+                        </small></div>";
                     }
                     ?>
                 </div>
@@ -58,12 +59,15 @@ if($user_words < 100){
                     <strong class="text-muted d-block mb-2">Groups I belong</strong>
                     <?php
                     foreach ($user->groupsMember() as $group){
-                        print "<div class='text-muted border-bottom'><em><a href='/groups/$group->id/show'>$group->name</a></em>, <small>- {$group->countMembers()} member(s)</small></div>";
+                        print "<div class='text-muted border-bottom'><em>
+                        <a href='/groups/$group->id/show'>$group->name</a></em>, 
+                        <small> Owner: {$group->owner()->name}, {$group->countMembers()} member(s)</small></div>";
                     }
                     ?>
                 </div>
             </div>
         </div>
+
         <div class="col-lg-8">
             <div class="form-container">
                 <h5 class="border-bottom py-2 mb-4">Account Details</h5>

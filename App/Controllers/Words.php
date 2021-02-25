@@ -25,18 +25,15 @@ class Words extends Controller
             //throw new \Exception("User Not Authenticated", 403);
         }
         $languages = $u->languages();
+
         $group = new Group();
         $featured_groups = $group->featured();
-
         $lan = new Language();
-        //$word = new Word();
-//print DB_connection::getCalls();
-        //var_dump($u->groups()); exit();
+
         View::render('Words/index.php', [
             'user'=>$u,
-            //'words'=>$word->limitWords($u, 15),
             'languages'=>$languages,
-            'all_lang'=> $lan->all(['id', 'name']),
+            'all_lang'=> $lan->index(), //index method returns objects, method all returns models, which is a problem as there are ~180 languages
             'chosen_language'=>$u->getLanguage(),
             'featured_groups'=> $featured_groups
         ]);

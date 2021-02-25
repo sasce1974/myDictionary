@@ -19,11 +19,20 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'b0079a1d9a1dfbf950a5e114380e922c50414521',
+    'reference' => '06be622f6da0f94071e4bb809b8c6e0576ce17f0',
     'name' => 'sasce1974/my_dictionary',
   ),
   'versions' => 
   array (
+    'google/recaptcha' => 
+    array (
+      'pretty_version' => '1.2.4',
+      'version' => '1.2.4.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '614f25a9038be4f3f2da7cbfd778dc5b357d2419',
+    ),
     'phpmailer/phpmailer' => 
     array (
       'pretty_version' => 'v6.2.0',
@@ -40,7 +49,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'b0079a1d9a1dfbf950a5e114380e922c50414521',
+      'reference' => '06be622f6da0f94071e4bb809b8c6e0576ce17f0',
     ),
   ),
 );

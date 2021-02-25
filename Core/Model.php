@@ -38,7 +38,7 @@ abstract class Model implements iModel, \Countable
             //$this->table = lcfirst(get_class($this)) . 's'; // table name as Model class name + 's'
         }
         $this->model = get_class($this);
-        //$this->con = DB_connection::getCon();
+        $this->con = DB_connection::getCon();
         if($object) $this->init($object);
 
     }
@@ -74,14 +74,15 @@ abstract class Model implements iModel, \Countable
      * processed in the init method, then collected in $this->collection array
      *
      * @param array|null $column
+     * @param string $output_as
      * @return array
      */
-    function all(array $column = null){
+    function all(array $column = null, $output_as = 'class'){
         try {
             $column = $column ? implode(", ", $column) : "*";
             $q = "SELECT $column FROM $this->table";
-            $query = $this->con()->query($q);
-
+            $query = $this->con->query($q);
+            if($output_as == 'object') return $query->fetchAll(PDO::FETCH_OBJ);
             return $query->fetchAll(PDO::FETCH_CLASS, $this->model);
         }catch (PDOException $e){
             print $e->getMessage();
@@ -89,12 +90,17 @@ abstract class Model implements iModel, \Countable
     }
 
 
-    function some($limit){
+    /**
+     * @param int $limit
+     * @param string $output_as
+     * @return array
+     */
+    function some($limit, $output_as = 'class'){
         try {
             $q = "SELECT * FROM $this->table LIMIT ?";
-            $query = $this->con()->prepare($q);
+            $query = $this->con->prepare($q);
             $query->execute(array((int)$limit));
-
+            if($output_as == 'object') return $query->fetchAll(PDO::FETCH_OBJ);
             return $query->fetchAll(PDO::FETCH_CLASS, $this->model);
         }catch (PDOException $e){
             print $e->getMessage();
@@ -111,13 +117,13 @@ abstract class Model implements iModel, \Countable
      */
     function find($id){
         //check if column 'id' exist in the table
-        $test_q = $this->con()->query("SHOW COLUMNS FROM $this->table LIKE 'id'");
+        $test_q = $this->con->query("SHOW COLUMNS FROM $this->table LIKE 'id'");
         if(!$test_q->rowCount()) throw new \Exception("Column 'id' not found in table $this->table");
 
         $q = "# noinspection SqlResolve @ column/\"id\" 
         SELECT * FROM $this->table WHERE id = ?";
         //$query = $this->con->query("SELECT * FROM $this->table WHERE id = $id");
-        $query = $this->con()->prepare($q);
+        $query = $this->con->prepare($q);
         $query->execute(array($id));
         if ($query->rowCount() !== 1) return false;
         $query->setFetchMode(PDO::FETCH_CLASS, $this->model);
@@ -127,15 +133,25 @@ abstract class Model implements iModel, \Countable
         return $this;
     }
 
-    function where($item, $value){
+    /**
+     * Returns array of model class objects or just objects
+     *
+     * @param $item [Model (table) column name (e.g. 'user_id')]
+     * @param $value [column value]
+     * @param string $output_as [optional, can be 'class' or 'object'. Default is 'class']
+     * @return array
+     * @throws \Exception
+     */
+    function where($item, $value, $output_as = 'class'){
 
         $item = filter_var($item, FILTER_SANITIZE_STRING);
-        $test_q = $this->con()->query("SHOW COLUMNS FROM $this->table LIKE '$item'");
+        $test_q = $this->con->query("SHOW COLUMNS FROM $this->table LIKE '$item'");
         if(!$test_q->rowCount()) throw new \Exception("Column $item not found in table $this->table");
 
         $q = "SELECT * FROM $this->table WHERE $item = ? LIMIT 150";
-        $query = $this->con()->prepare($q);
+        $query = $this->con->prepare($q);
         $query->execute(array($value));
+        if($output_as == 'object') return $query->fetchAll(PDO::FETCH_OBJ);
         return $query->fetchAll(PDO::FETCH_CLASS, $this->model);
     }
 
@@ -143,11 +159,11 @@ abstract class Model implements iModel, \Countable
     function countWhere($item, $value){
 
         $item = filter_var($item, FILTER_SANITIZE_STRING);
-        $test_q = $this->con()->query("SHOW COLUMNS FROM $this->table LIKE '$item'");
+        $test_q = $this->con->query("SHOW COLUMNS FROM $this->table LIKE '$item'");
         if(!$test_q->rowCount()) throw new \Exception("Column $item not found in table $this->table");
 
         $q = "SELECT COUNT(*) FROM $this->table WHERE $item = ?";
-        $query = $this->con()->prepare($q);
+        $query = $this->con->prepare($q);
         $query->execute(array($value));
         return $query->fetchColumn();
     }

@@ -1,4 +1,6 @@
-
+                            <p class="mt-0 mb-1 ml-3">
+                                Log in to your account.
+                            </p>
                             <form class="row m-0" id="loginForm" method="POST" action="/login/new">
                                 <input type="hidden" name="init"
                                        value="<?php if (isset($_SESSION['token'])) print $_SESSION['token']; ?>">

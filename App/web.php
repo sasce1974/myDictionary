@@ -3,6 +3,7 @@ $router = new Core\Router();
 
 
 // Add the routes
+$router->add('contact', ['controller' => 'Contact', 'action' => 'index']);
 $router->add('login', ['namespace'=>'Auth', 'controller' => 'Login', 'action' => 'index']);
 $router->add('login/new', ['namespace'=>'Auth', 'controller' => 'Login', 'action' => 'new']);
 $router->add('logout', ['namespace'=>'Auth', 'controller' => 'Login', 'action' => 'logout']);

@@ -12,7 +12,7 @@ isset($featured_groups) ? : $featured_groups = array();
 //print DB_connection::getCalls();
 ?>
 <div id="word-info"></div>
-<main class="mx-auto px-lg-4 px-md-2 pr-sm-0 pr-sm-1">
+<main class="mx-auto px-lg-1 pr-sm-0">
 
     <div class="row m-0 mt-1">
         <div class="words-column col-md-3 border rounded mb-3">
@@ -194,7 +194,7 @@ isset($featured_groups) ? : $featured_groups = array();
             ?>
         </div>
 
-        <div class="col-md-2 text-center" style="font-size: smaller">
+        <div class="col-md-2 text-center px-1" style="font-size: smaller">
             <h5>Recent groups</h5>
             <?php
             foreach ($featured_groups as $group){
@@ -250,9 +250,9 @@ isset($featured_groups) ? : $featured_groups = array();
             "       <input class='form-control form-control-sm w-100' type=\"text\" name=\"lang2\" value='" + data['lang2'] + "'>\n" +
             "   </div>\n" +
             "   <div class=\"col-2 m-0 p-0\">\n" +
-            "       <div class='row m-0'>" +
-            "       <button class='col btn btn-link btn-sm text-success' type=\"submit\"><i class=\"fas fa-check\"></i> <span class='d-none d-xl-block'>Update</span></button>\n" +
-            "       <button class='col btn btn-link text-secondary btn-sm' onclick='cancelUpdate()' type=\"button\"><i class=\"fas fa-times\"></i> <span class='d-none d-xl-block'>Cancel</span></button>\n" +
+            "       <div class='d-flex m-0'>" +
+            "       <button class='btn btn-link btn-sm text-success flex-grow-1' style='white-space: nowrap' type=\"submit\"><i class=\"fas fa-check d-xl-none d-block\"></i> <span class='d-none d-xl-block'> Update</span></button>\n" +
+            "       <button class='btn btn-link text-secondary btn-sm flex-grow-1s' style='white-space: nowrap' onclick='cancelUpdate()' type=\"button\"><i class=\"fas fa-times d-xl-none d-block\"></i> <span class='d-none d-xl-block'> Cancel</span></button>\n" +
             "       </div>" +
             "   </div>\n" +
             "</form>\n";

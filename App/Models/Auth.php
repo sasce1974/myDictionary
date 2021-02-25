@@ -80,7 +80,7 @@ class Auth extends Model
 
     public function loginAttempt($email){
         $q = "INSERT INTO login_attempt (ID, email, ip, time) VALUES (NULL , ?, ?, NOW())";
-        $query = $this->con()->prepare($q);
+        $query = $this->con->prepare($q);
         return $query->execute(array($email, $_SERVER['REMOTE_ADDR']));
     }
 
@@ -135,7 +135,7 @@ class Auth extends Model
     public function emailPass($email) {
 
         $q = "SELECT id, email FROM users WHERE email = ?";
-        $query = $this->con()->prepare($q);
+        $query = $this->con->prepare($q);
         $query->execute(array($email));
 
         if($query->rowCount() !== 1) return false;
@@ -151,7 +151,7 @@ class Auth extends Model
         $hash = uniqid(rand(1000000, 9999999), true);
         //$safeHash = $mysqli->real_escape_string($hash);
         $insertQuery = "INSERT INTO resetpassword (email_id, pass_key, date_created, status) VALUES (?, ?, NOW(), 'A')";
-        $query = $this->con()->prepare($insertQuery);
+        $query = $this->con->prepare($insertQuery);
 
         if (!$query->execute(array($user->id, $hash))) {
             error_log("Problem inserting resetPassword info for " . $user->id);
@@ -195,7 +195,7 @@ class Auth extends Model
 
         $q = "SELECT u.id as id, u.email as email FROM users u, resetpassword r WHERE 
               r.status = 'A' AND r.pass_key = ? AND u.email = ? AND u.id = r.email_id";
-        $query = $this->con()->prepare($q);
+        $query = $this->con->prepare($q);
         $result = $query->execute(array($hash, $email));
 
         if (!$result) {
@@ -227,7 +227,7 @@ class Auth extends Model
 
         $newPass = password_hash($pass, PASSWORD_DEFAULT);
         $q = "UPDATE users SET password = ? WHERE id = ?";
-        $query = $this->con()->prepare($q);
+        $query = $this->con->prepare($q);
 
         return $query->execute(array($newPass, $id));
 

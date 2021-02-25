@@ -12,7 +12,8 @@
         "ext-pdo": "*",
         "ext-curl": "*",
         "phpmailer/phpmailer": "^6.2",
-      "ext-json": "*"
+      "ext-json": "*",
+        "google/recaptcha": "^1.2"
     },
     "autoload": {
         "psr-4": {

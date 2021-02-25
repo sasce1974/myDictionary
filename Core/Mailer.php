@@ -27,6 +27,8 @@ class Mailer
         if($from==null) $from = Config::getConfig('app.smtp.from'); //'admin@dictionary.papucraft.com';
         $this->mail->setFrom($from, Config::getConfig('app.name'));
         $this->mail->addAddress($user->email, $user->name);
+        //todo method addAddress should be used directly from the script that sends the email,
+        // since it can be used multiple times for sending emails to more addresses!
         $this->mail->Subject = $subject;
 
         // Set HTML
@@ -43,11 +45,11 @@ class Mailer
     public function send(){
         // send the message
         if(!$this->mail->send()){
-            $_SESSION['error'][]= 'Message could not be sent. Error: ' . $this->mail->ErrorInfo;
+            //$_SESSION['error'][]= 'There was some error. Message could not be sent.';
             error_log('Message could not be sent. Error: ' . $this->mail->ErrorInfo);
             return false;
         } else {
-            $_SESSION['message'] = "Message sent";
+            //$_SESSION['message'] = "Message sent";
             return true;
         }
     }

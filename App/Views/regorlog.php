@@ -1,4 +1,7 @@
 <?php
+if(session_id() == ""){
+    session_start();
+}
 
 use App\Models\Auth;
 
@@ -31,19 +34,20 @@ if (Auth::check()) {
     <meta name="author" content="3Delacto">
 
     <meta property="og:title" content="MyDictionary | Login">
-    <meta property="og:image" content="https://3delacto.com/img/logo.png">
+    <meta property="og:image" content="https://dictionary.papucraft.com/images/MDlogo.png">
     <meta property="og:url" content="https://dictionary.papucraft.com">
     <meta property="og:site_name" content="MyDictionary">
     <meta property="og:description"
           content="Multi language dictionary to English dictionary - Personal and Team/Classroom shared dictionary">
     <meta name="twitter:title" content="MyDictionary | Login">
-    <meta name="twitter:image" content="https://3delacto.com/img/logo.png">
+    <meta name="twitter:image" content="https://dictionary.papucraft.com/images/MDlogo.png">
     <meta name="twitter:url" content="https://dictionary.papucraft.com">
     <meta name="twitter:card"
           content="Multi language dictionary to English dictionary - Personal and Team/Classroom shared dictionary">
 <!--    <link rel="icon" type="image/svg+xml" href="/images/logo_w.svg.">-->
 <!--    <link rel="alternate icon" type="image/png" href="/images/favicon.ico">-->
-    <link rel="icon" type="image/png" href="/images/favicon_d.png">
+<!--    <link rel="icon" type="image/png" href="/images/favicon_d.png">-->
+    <link rel="icon" type="image/png" href="/images/MDlogo.png">
 
     <title>My Dictionary - Let's Language Together</title>
 
@@ -73,7 +77,8 @@ if (Auth::check()) {
 <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
         <a class="navbar-brand" href="#">
-            <img alt="Logo" src="/images/logo_w.svg" width="70px" height="auto">
+<!--            <img alt="Logo" src="/images/logo_w.svg" width="70px" height="auto">-->
+            <img alt="Logo" src="/images/logo_dictionary1.svg" width="auto" height="40">
             MyDictionary
         </a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
@@ -89,6 +94,9 @@ if (Auth::check()) {
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/register">REGISTER</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact">CONTACT</a>
                 </li>
 
 <!--                <li class="nav-item">
@@ -159,10 +167,12 @@ if (Auth::check()) {
 
                             <?php
 
-                            if($_SERVER['REQUEST_URI'] == '/login'){
+                            if(explode("/", $_SERVER['REQUEST_URI'])[1] == 'login'){
                                 include_once "Login/_login_form.php";
-                            }elseif($_SERVER['REQUEST_URI'] == '/register') {
+                            }elseif(explode("/", $_SERVER['REQUEST_URI'])[1] == 'register') {
                                 include_once "Register/_register_form.php";
+                            }elseif(explode("/", $_SERVER['REQUEST_URI'])[1] == 'contact') {
+                                include_once "Login/_contact_form.php";
                             }
                             ?>
 
@@ -296,11 +306,16 @@ if (Auth::check()) {
 
 <!-- Bootstrap core JavaScript -->
 <script src="/js/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <!--  <script src="vendor/jquery/jquery.min.js"></script>-->
 <!--  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
         integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
         crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js" integrity="sha256-dHf/YjH1A4tewEsKUSmNnV05DDbfGN3g7NMq86xgGh8=" crossorigin="anonymous"></script>
+<script src="/js/contact.js"></script>
+
+<script src='https://www.google.com/recaptcha/api.js'></script>
 <!-- Custom scripts for this template -->
 <script src="/js/clean-blog.min.js"></script>
 

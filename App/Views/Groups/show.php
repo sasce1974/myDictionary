@@ -26,7 +26,7 @@ include $base_page;
                     print "Created: " . date('d F Y', strtotime($group->created_at));
                     print "</p>";
                     print "About this group:";
-                    print "<p>$group->about</p>";
+                    print "<p>" . nl2br($group->about) . "</p>";
                     ?>
                 </div>
             </div>

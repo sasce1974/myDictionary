@@ -421,6 +421,11 @@ footer .copyright {
   color: red;
 }
 
+.with-errors{
+  font-size: small;
+  color: red;
+}
+
 html {
   scroll-behavior: smooth;
 }

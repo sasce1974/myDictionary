@@ -43,7 +43,8 @@ $auth_user = Auth::user();
 <!--    <link rel="icon" type="image/svg+xml" href="/images/logo_w.svg.">-->
 
 <!--    <link rel="alternate icon" type="image/png" href="/images/favicon.ico">-->
-    <link rel="icon" type="image/png" href="/images/favicon_d.png">
+<!--    <link rel="icon" type="image/png" href="/images/favicon_d.png">-->
+    <link rel="icon" type="image/png" href="/images/MDlogo.png">
     <?php
     if(isset($additional_css)) print $additional_css;
     ?>
@@ -54,7 +55,8 @@ $auth_user = Auth::user();
 
 <nav class="navbar navbar-expand-md navbar-light bg-light py-0">
     <a class="navbar-brand" href="#">
-        <img alt="Logo" src="/images/logo_w.svg" width="70px" height="auto">
+<!--        <img alt="Logo" src="/images/logo_w.svg" width="70px" height="auto">-->
+        <img alt="Logo" src="/images/logo_dictionary1.svg" width="auto" height="50">
         MY DICTIONARY
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

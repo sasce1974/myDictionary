@@ -261,7 +261,11 @@ class Groups extends Controller
         //use Mailer class to send emails
         $mail = new Mailer();
         $mail->setMail($user, $subject, $message);
-        $mail->send();
+        if($mail->send()){
+            $_SESSION['message'] = "Message sent";
+        }else{
+            $_SESSION['error'][]= 'There was some error. Message could not be sent.';
+        }
 
         header("Location: /groups/$myGroup->id/show");
         exit();
