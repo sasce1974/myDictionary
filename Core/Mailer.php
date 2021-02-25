@@ -24,7 +24,7 @@ class Mailer
 
 
     public function setMail($user, $subject, $message, $from=null){
-        if($from==null) $from = Config::getConfig('app.smtp.from'); //'admin@dictionary.papucraft.com';
+        if($from==null) $from = Config::getConfig('app.smtp.from');
         $this->mail->setFrom($from, Config::getConfig('app.name'));
         $this->mail->addAddress($user->email, $user->name);
         //todo method addAddress should be used directly from the script that sends the email,
