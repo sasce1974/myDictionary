@@ -4,6 +4,7 @@
 namespace App\Controllers;
 
 
+use App\Config;
 use App\Mails\ContactMail;
 use App\Models\User;
 use Core\Controller;
@@ -29,7 +30,7 @@ class Contact extends Controller
             $errorMessage = 'ReCaptcha is not set.';
         }
 
-        $secret_key = '6Les0WUaAAAAAJdh8xxwLNptLT9iRIkWSfKTvHCr';
+        $secret_key = Config::getConfig('app.captcha.secret_key');
 
         $recaptcha = new ReCaptcha($secret_key, new CurlPost());
 
