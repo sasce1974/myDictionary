@@ -194,17 +194,22 @@ isset($featured_groups) ? : $featured_groups = array();
             ?>
         </div>
 
-        <div class="col-md-2 text-center px-1" style="font-size: smaller">
+        <div class="col-md-2 text-center px-1" style="font-size: small">
             <h5>Recent groups</h5>
             <?php
             foreach ($featured_groups as $group){
                 print "<div class='border rounded m-2 p-1'>";
-                print "<a href='/groups/$group->id/show'>";
-                print "<h6 class='text-primary'>$group->name</h6>";
-                print "</a>";
-                print "<div class='small'>{$group->owner()->name}</div>";
-                print "<div class='small text-muted'>$group->city, $group->country</div>";
-                print "<div class='small text-truncate'>$group->about</div>";
+                    print "<a href='/groups/$group->id/show'>";
+                        print "<div class='text-primary'>$group->name</div>";
+                    print "</a>";
+                    print "<div class='small'>{$group->owner()->name}</div>";
+                    print "<div class='small text-muted'>$group->city, $group->country</div>";
+                    print "<div class='small text-truncate border-bottom'>$group->about</div>";
+
+                if(!$group->hasUser($auth_user->id) && !$group->joinRequestExists($auth_user->id))
+                    print "<a class='btn btn-primary btn-sm px-1 py-0 m-1' 
+                        href='/groups/$group->id/join/?token=$token'><small>Join <i class='fas fa-plus'></i></small>
+                        </a>";
 
                 print "</div>";
             }

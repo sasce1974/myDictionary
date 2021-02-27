@@ -1,4 +1,7 @@
 <?php
+
+use App\Models\Auth;
+
 $title = "Dictionary | Manage Group";
 include $base_page;
 
@@ -13,7 +16,17 @@ include $base_page;
                         <a class="btn btn-outline-warning btn-sm float-right" href="/groups/<?php print $group->id; ?>/edit">
                             <i class="fas fa-edit"></i> Edit
                         </a>
-                    <?php } ?>
+                    <?php }elseif (!$group->hasUser($auth_user->id)){
+                        print "<form class=\"float-right\" action='/groups/$group->id/join\' method='get'>";
+                            print "<input type='hidden' name='token' value='$token'>";
+                            if(!$group->joinRequestExists($auth_user->id)){
+                                print "<button type=\"submit\" class=\"btn btn-primary btn-sm\">Join Group <i class='fas fa-plus'></i></button>";
+                            }else{
+                                print "<button type='button' class='btn btn-secondary btn-sm'>Join Request Sent <i class='fas fa-check'></i></button>";
+                            }
+
+                        print "</form>";
+                    } ?>
                 </div>
                 <hr>
                 <div class="px-1">
@@ -92,7 +105,39 @@ include $base_page;
                     }
                     print "</div>";
                 }
-                print "</div>";
+
+                //show join requests
+                if($auth_user->id == $group->owner_id) {
+                    $users_requested_to_join = $group->joinRequests();
+                    if (count($users_requested_to_join) > 0) {
+                        print "<hr>";
+                        print "<div class='text-secondary'>";
+                        print "<h6 class=''>Join requests</h6>";
+                        $x = 1;
+                        foreach ($users_requested_to_join as $member) {
+                            $title = "No user message";
+                            if ($member->user_message) $title = $member->user_message;
+                            print "<div class='d-flex flex-row flex-grow-1 align-content-center' title='$title'>";
+                                print "<h6 class='flex-grow-1 border-bottom border-secondary'>$x. $member->name";
+                                print ", <em><a href='mailto:$member->email'>$member->email</a></em>";
+                                print "</h6>";
+                                $x++;
+
+                                print "<a class='btn btn-success btn-sm py-0 mb-2' href='/groups/$group->id/joinAccept/$member->user_id'><span class='small'><i class='fas fa-check'></i> Accept</span></a>";
+                                print "<a class='btn btn-danger btn-sm py-0 mb-2 ml-2' href='/groups/$group->id/joinDecline/$member->user_id'><span class='small'><i class='fas fa-times'></i> Decline</span></a>";
+
+                                /*print "<form onsubmit=\"return confirm('Reject the join request?')\"
+                                      action=\"/groups/$group->id/joinDecline/$member->user_id\"
+                                      method=\"post\">";
+                                    print "<input type='hidden' name='token' value='$token'>";
+                                    print "<button type=\"submit\" class='btn btn-sm btn-danger py-0 mb-2 ml-2'><span class='small'><i class='fas fa-times'></i> Decline</span></button>";*/
+                                print "</form>";
+                            print "</div>";
+                        }
+                        print "</div>";
+                    }
+                }
+
                 ?>
             </div>
 

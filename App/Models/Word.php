@@ -51,7 +51,7 @@ class Word extends Model
         $q = "SELECT * FROM words WHERE (lang1 LIKE ? OR lang2 LIKE ?) AND 
             (user_id = ? OR user_id IN 
                 (SELECT DISTINCT user_id FROM groups_users WHERE group_id IN 
-                    (SELECT group_id FROM groups_users WHERE user_id = ?))) 
+                    (SELECT group_id FROM groups_users WHERE user_id = ? AND group_invite_hash IS NULL))) 
             AND language_id = ? ORDER BY created_at DESC LIMIT 150";
         $query = $this->con->prepare($q);
         $query->execute(array("%$string%", "%$string%", $user->id, $user->id, $user->language_id));
@@ -65,7 +65,7 @@ class Word extends Model
         $user = Auth::user();
         $q = "SELECT * FROM words WHERE (user_id = ? OR user_id IN 
                 (SELECT DISTINCT user_id FROM groups_users WHERE group_id IN 
-                    (SELECT group_id FROM groups_users WHERE user_id = ?)))
+                    (SELECT group_id FROM groups_users WHERE user_id = ? AND group_invite_hash IS NULL)))
                 AND language_id = ? ORDER BY created_at DESC LIMIT ?";
         $query = $this->con->prepare($q);
         $query->execute(array($user->id, $user->id, $user->language_id, $limit));

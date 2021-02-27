@@ -186,17 +186,116 @@ class Groups extends Controller
     }
 
     /* MEMBERS */
+    public function joinAction(){
+        $group_id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
+        $group = new Group();
+        $group = $group->find($group_id);
+
+
+        if(!$group || !(isset($_GET['token'], $_SESSION['token']) && $_GET['token'] == $_SESSION['token'])){
+            $_SESSION['error'][] = "Wrong parameters sent. User not invited.";
+            if($group){
+                header("Location: /groups/$group_id/show");
+            }else{
+                header("Location: /");
+            }
+            exit(500);
+        }
+
+        $user_id = Auth::id();
+
+        //check if user is not already in this group
+        if($group->checkIfUserIsInGroup($user_id, $group->id)){
+            $_SESSION['error'][] = "You are already invited in this group.";
+            header("Location: /groups/$group_id/show");
+            exit(403);
+        }
+
+        //check if user already requested to join this group
+        if($group->joinRequestExists($user_id)){
+            $_SESSION['error'][] = "You already requested to join this group.";
+            header("Location: /groups/$group_id/show");
+            exit(403);
+        }
+
+        $user_message = filter_input(INPUT_GET, 'message', FILTER_SANITIZE_STRING);
+
+        if($group->joinRequest($user_id, $user_message)){
+            $_SESSION['message'] = "Join request sent";
+            http_response_code(200);
+        }else{
+            $_SESSION['error'][] = "There was some error. Request not sent.";
+            http_response_code(500);
+        }
+        header("Location: /groups/$group_id/show");
+        exit();
+    }
+
+    public function joinAcceptAction(){
+        $group_id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
+        $user_id = filter_var($this->route_params['aid'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
+        $group = new Group();
+        $group = $group->find($group_id);
+        if($group){
+            //check if auth user is owner
+            if($group->owner_id == Auth::id()){
+                if($group->joinAccept($user_id)){
+                    $_SESSION['message'] = "New member accepted";
+                    http_response_code(200);
+                }else{
+                    $_SESSION['error'][] = "There was some error. Join request not accepted.";
+                    http_response_code(500);
+                }
+            }else{
+                throw new \Exception("Not Authorized", 403);
+            }
+            header("Location: /groups/$group_id/show");
+            exit();
+        }else{
+            throw new \Exception("Not Found", 404);
+        }
+    }
+
+    public function joinDeclineAction(){
+        $group_id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
+        $user_id = filter_var($this->route_params['aid'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
+        $group = new Group();
+        $group = $group->find($group_id);
+        if($group){
+            //check if auth user is owner
+            if($group->owner_id == Auth::id()){
+                if($group->joinDecline($user_id)){
+                    $_SESSION['message'] = "Join request declined";
+                    http_response_code(200);
+                }else{
+                    $_SESSION['error'][] = "There was some error. Join request not declined.";
+                    http_response_code(500);
+                }
+            }else{
+                throw new \Exception("Not Authorized", 403);
+            }
+            header("Location: /groups/$group_id/show");
+            exit();
+        }
+    }
 
     public function inviteAction(){
         $group_id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
 
-        if($_GET['token'] !== $_SESSION['token']){
-            $_SESSION['error'][] = "Wrong parameters sent. User not invited.";
-            header("Location: /groups/$group_id/show");
-            exit(500);
-        }
         $group = new Group();
         $myGroup = $group->find($group_id);
+
+        if(!$myGroup || !(isset($_GET['token'], $_SESSION['token']) && $_GET['token'] == $_SESSION['token'])){
+            $_SESSION['error'][] = "Wrong parameters sent. User not invited.";
+            if($myGroup){
+                header("Location: /groups/$group_id/show");
+            }else{
+                header("Location: /");
+            }
+
+            exit(500);
+        }
+
 
         //Check if auth user is owner of this group
         if($group->owner_id !== Auth::id()) {
@@ -225,6 +324,14 @@ class Groups extends Controller
             //check if user is not already in this group
             if($group->checkIfUserIsInGroup($user->id, $myGroup->id)){
                 $_SESSION['error'][] = "User is already invited in this group.";
+                header("Location: /groups/$group_id/show");
+                exit(403);
+            }
+
+            //check if user has requested to join the group
+            if($myGroup->joinRequestExists($user->id)){
+                $_SESSION['error'][] = "User has already requested to join this group. 
+                Please accept or decline the request";
                 header("Location: /groups/$group_id/show");
                 exit(403);
             }

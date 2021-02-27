@@ -165,6 +165,102 @@ class Group extends Model
     }
 
 
+    /**
+     * Get array of users that requested to join this group
+     *
+     * @return array
+     */
+    public function joinRequests(){
+        $q = "SELECT u.id, u.name, u.email, j.* FROM users u, join_group_request j WHERE 
+            j.group_id = '$this->id' AND j.user_id = u.id AND j.declined = 0 
+            ORDER BY j.id";
+        $query = $this->con->query($q);
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
+
+    /**
+     * Request by an user to join this group
+     *
+     * @param $user_id
+     * @param null $message
+     * @return bool
+     */
+    public function joinRequest($user_id, $message = null){
+        $q = "INSERT INTO join_group_request (group_id, user_id, user_message) VALUES (?, ?, ?)";
+        $query = $this->con->prepare($q);
+        $query->execute(array($this->id, $user_id, $message));
+        if($query->rowCount() == 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * Check if there is a request by the user to join this group
+     *
+     * @param $user_id
+     * @return bool
+     */
+    public function joinRequestExists($user_id){
+        $q = "SELECT COUNT(id) FROM join_group_request WHERE group_id = ? AND user_id = ?";
+        $query = $this->con->prepare($q);
+        $query->execute(array($this->id, $user_id));
+        $r = $query->fetchColumn();
+        if($r > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+    /**
+     * Accept the user request to join this group
+     *
+     * @param $user_id
+     * @return bool
+     */
+    public function joinAccept($user_id){
+        $q = "DELETE FROM join_group_request WHERE group_id = ? AND user_id = ?";
+        $query = $this->con->prepare($q);
+        $query->execute(array($this->id, $user_id));
+        if($query->rowCount() == 1){
+            $q = "INSERT INTO groups_users (group_id, user_id) VALUES (?, ?)";
+            $query = $this->con->prepare($q);
+            $query->execute(array($this->id, $user_id));
+            if($query->rowCount() === 1) return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Decline user request to join this group
+     *
+     * @param $user_id
+     * @return bool
+     */
+    public function joinDecline($user_id){
+        $q = "UPDATE join_group_request SET declined = 1 WHERE group_id = ? AND user_id = ?";
+        $query = $this->con->prepare($q);
+        $query->execute(array($this->id, $user_id));
+        if($query->rowCount() == 1){
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * Send invitation by email to user to join the group
+     *
+     * @param $group_id
+     * @param $user_id
+     * @param $hash
+     * @return bool
+     */
     public function makeInviteHash($group_id, $user_id, $hash){
 
         $q = "INSERT INTO groups_users (group_id, user_id, group_invite_hash) VALUES (?, ?, ?)";
@@ -174,6 +270,12 @@ class Group extends Model
         return false;
     }
 
+    /**
+     * Clear the invitation hash after the user accepts invitation or invitation is been revoked
+     *
+     * @param $hash
+     * @return bool|mixed
+     */
     public function clearInviteHash($hash){
         $q = "SELECT * FROM groups_users WHERE group_invite_hash = ?";
         $query = $this->con->prepare($q);
@@ -190,6 +292,14 @@ class Group extends Model
         $q = "SELECT COUNT(id) FROM groups_users WHERE user_id=? AND group_id=?";
         $query = $this->con->prepare($q);
         $query->execute(array($user_id, $group_id));
+        if($query->fetchColumn() > 0) return true;
+        return false;
+    }
+
+    public function hasUser($user_id){
+        $q = "SELECT COUNT(id) FROM groups_users WHERE user_id=? AND group_id=?";
+        $query = $this->con->prepare($q);
+        $query->execute(array($user_id, $this->id));
         if($query->fetchColumn() > 0) return true;
         return false;
     }

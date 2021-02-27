@@ -14,17 +14,17 @@ class Mailer
         $this->mail = new PHPMailer();
 
         $this->mail->isSMTP();
-        $this->mail->Host = Config::getConfig('app.smtp.host'); //'smtp.mailtrap.io';
+        $this->mail->Host = Config::getConfig('app.smtp.host');
         $this->mail->SMTPAuth = true;
-        $this->mail->Username = Config::getConfig('app.smtp.user'); //'97979891200e02';
-        $this->mail->Password = Config::getConfig('app.smtp.pass'); //'6336cac52d41bf';
-        $this->mail->SMTPSecure = Config::getConfig('app.smtp.secure'); //null;
-        $this->mail->Port = Config::getConfig('app.smtp.port'); //465;
+        $this->mail->Username = Config::getConfig('app.smtp.user');
+        $this->mail->Password = Config::getConfig('app.smtp.pass');
+        $this->mail->SMTPSecure = Config::getConfig('app.smtp.secure');
+        $this->mail->Port = Config::getConfig('app.smtp.port');
     }
 
 
     public function setMail($user, $subject, $message, $from=null){
-        if($from==null) $from = Config::getConfig('app.smtp.from'); //'admin@dictionary.papucraft.com';
+        if($from==null) $from = Config::getConfig('app.smtp.from');
         $this->mail->setFrom($from, Config::getConfig('app.name'));
         $this->mail->addAddress($user->email, $user->name);
         //todo method addAddress should be used directly from the script that sends the email,
