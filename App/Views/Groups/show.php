@@ -31,7 +31,7 @@ include $base_page;
                 <hr>
                 <div class="px-1">
                     <?php
-                    print "<h5>Moderator: " . $group->owner()->name . "</h5>";
+                    print "<h5>Moderator: " . ($group->owner() ? $group->owner()->name : 'Unknown') . "</h5>";
                     print "<br>";
                     print "<p>";
                     print "Country: $group->country<br>";
@@ -69,8 +69,9 @@ include $base_page;
                     if($auth_user->id == $group->owner_id) print ", <em><a href='mailto:$member->email'>$member->email</a></em>";
                     print "</h6>";
                     $x++;
-                    if($auth_user->id == $group->owner_id && $auth_user->id !==$member->id){ ?>
-                    <form onsubmit="return confirm('Remove this member from the group?')"
+                    if(($auth_user->id == $group->owner_id && $auth_user->id !==$member->id) ||
+                        ($auth_user->id != $group->owner_id && $auth_user->id ==$member->id)){ ?>
+                    <form onsubmit="return confirm('Cancel member from the group?')"
                           action="/groups/<?php echo $group->id; ?>/destroyMember/<?php echo $member->id; ?>" method="post">
                         <input type='hidden' name='token' value='<?php print $token; ?>'>
                         <button type="submit" class='btn btn-sm btn-outline-danger border-0 py-0 mb-2'>x</button>

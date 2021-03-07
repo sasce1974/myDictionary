@@ -305,8 +305,9 @@ class Group extends Model
     }
 
     public function removeUser($user_id){
-        //check if auth user is owner
-        if($this->owner_id === Auth::id()){
+        //check if auth user is owner or user is the auth
+        $auth_id = Auth::id();
+        if($this->owner_id == $auth_id || $user_id == $auth_id){
             $q = "DELETE FROM groups_users WHERE user_id = ? AND group_id = ?";
             $query = $this->con->prepare($q);
             $query->execute(array($user_id, $this->id));
@@ -314,5 +315,6 @@ class Group extends Model
         }
         return false;
     }
+
 
 }

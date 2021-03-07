@@ -34,18 +34,18 @@ class Register extends Controller
             unset($_SESSION['token']);
         }
 
-        if (!preg_match("/^[a-zA-Z .]+$/", $_POST["name"])) {
-            $_SESSION["error"][] = "Name and surname can contain only letters.";
+        if (!preg_match("/^[a-zA-Z .]{3,100}/", trim($_POST["name"]))) {
+            $_SESSION["error"][] = "Name and surname can contain only letters, minimum 3 letters.";
         }
 
-        if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL)) {
             $_SESSION["error"][] = "Invalid email address"; }
 
         if ($_POST["password1"] != $_POST["password2"]) {
             $_SESSION["error"][] = "Passwords doesn't match";
         }
 
-        if($user->checkIfEmailExist($_POST['email'])){
+        if($user->checkIfEmailExist(trim($_POST['email']))){
             $_SESSION["error"][] = "Account with the same e-mail already exist.";
         }
 
@@ -55,15 +55,12 @@ class Register extends Controller
             exit(400);
         } else {
             //save new user
-            $email = $_POST['email'];
-
-            //check if the
-
-
-            $name = $_POST['name'];
+            $email = trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
+            $name = trim(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING));
             $password = $_POST['password1'];
             $newUserData = ['email'=>$email, 'name'=>$name, 'password'=>$password];
 
+            //check if user has many accounts from same IP
             if($user->store($newUserData)){
                 unset($_SESSION["formAttempt"]);
                 $_SESSION['message'] = "User {$name} registered. Please Log in to continue.";
@@ -81,12 +78,14 @@ class Register extends Controller
 
 
     public function checkEmailExist(){
-        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+        $email = trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
         $user = new User();
-        if($user->checkIfEmailExist($email)){
-            print "<span style='color:#f55;font-size:80%;'>This email is taken &nbsp;&#x2718;</span>";
-        }else{
-            print "<span style='color:#3b3;font-size:80%;'>This email is available &nbsp;&#x2714;</span>";
+        if(!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            if ($user->checkIfEmailExist($email)) {
+                print "<span style='color:#f55;font-size:80%;'>This email is taken &nbsp;&#x2718;</span>";
+            } else {
+                print "<span style='color:#3b3;font-size:80%;'>This email is available &nbsp;&#x2714;</span>";
+            }
         }
     }
 

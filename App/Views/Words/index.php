@@ -202,7 +202,7 @@ isset($featured_groups) ? : $featured_groups = array();
                     print "<a href='/groups/$group->id/show'>";
                         print "<div class='text-primary'>$group->name</div>";
                     print "</a>";
-                    print "<div class='small'>{$group->owner()->name}</div>";
+                    print "<div class='small'>" . ($group->owner() ? $group->owner()->name : 'Unknown') . "</div>";
                     print "<div class='small text-muted'>$group->city, $group->country</div>";
                     print "<div class='small text-truncate border-bottom'>$group->about</div>";
 

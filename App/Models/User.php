@@ -124,6 +124,22 @@ class User extends Model
         return false;
     }
 
+    public function delete(){
+        $q = "DELETE FROM users WHERE id = ?";
+        $query = $this->con->prepare($q);
+        $query->execute(array($this->id));
+        if($query->rowCount() == 1) return true;
+        return false;
+    }
+
+    public function removeFromAllGroups(){
+        $q = "DELETE FROM groups_users WHERE user_id = ?";
+        $query = $this->con->prepare($q);
+        if($query->execute(array($this->id))) return true;
+        return false;
+    }
+
+
     public function checkIfEmailExist($email){
         $findUser = "SELECT id FROM users WHERE email = ?";
         $findResult = $this->con->prepare($findUser);

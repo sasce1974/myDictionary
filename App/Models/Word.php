@@ -146,6 +146,10 @@ class Word extends Model
         return $query->execute(array($word, Auth::id()));
     }
 
+    public function deleteApiCalls(){
+        $q = "DELETE FROM word_api_calls WHERE created_at < DATE_SUB(NOW(), INTERVAL 5 day)";
+    }
+
 
     public function wordInfo($word){
 

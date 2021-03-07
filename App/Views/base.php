@@ -71,6 +71,13 @@ $auth_user = Auth::user();
             <li class="nav-item">
                 <a class="nav-link" href="/groups/create">Create Group</a>
             </li>
+            <?php
+            if($auth_user->id == 1){
+                print "<li class=\"nav-item\">";
+                print   "<a class=\"nav-link\" href=\"/users/index\">Users</a>";
+                print "</li>";
+            }
+            ?>
         </ul>
         <ul class="navbar-nav ml-auto">
     <?php

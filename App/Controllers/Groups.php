@@ -424,7 +424,7 @@ class Groups extends Controller
         $group = $group->find($group_id);
         if($group){
             if($group->removeUser($user_id)){
-                $_SESSION['message'] = "Member removed from the group";
+                $_SESSION['message'] = "User removed from the group";
                 header("Location: /groups/$group_id/show");
                 exit(200);
             }

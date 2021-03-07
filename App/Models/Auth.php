@@ -74,7 +74,7 @@ class Auth extends Model
         self::$isLogged = true;
 
         self::_setSession();
-        return true;
+        return true; //can return user
     }
 
 
