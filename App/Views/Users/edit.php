@@ -61,7 +61,9 @@ if($user_words < 100){
                     foreach ($user->groupsMember() as $group){
                         print "<div class='text-muted border-bottom'><em>
                         <a href='/groups/$group->id/show'>$group->name</a></em>, 
-                        <small> Owner: {$group->owner()->name}, {$group->countMembers()} member(s)</small></div>";
+                        <small> Owner: ";
+                        print ($group->owner() ? $group->owner()->name : 'None') . ', ';
+                        print "{$group->countMembers()} member(s)</small></div>";
                     }
                     ?>
                 </div>

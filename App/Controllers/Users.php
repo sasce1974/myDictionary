@@ -116,7 +116,7 @@ class Users extends Controller
         }else{
             throw new \Exception("User " . Auth::id() . " made unsuccessful attempt to delete user $id");
         }
-        header("Location:" . $_SERVER['HTTP_REFERER']);
+        header("Location: /login");
         exit();
     }
 }

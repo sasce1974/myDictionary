@@ -67,6 +67,7 @@ include $base_page;
                     print "<div class='d-flex flex-row flex-grow-1 align-content-center'>";
                     print "<h6 class='flex-grow-1 border-bottom'>$x. $member->name";
                     if($auth_user->id == $group->owner_id) print ", <em><a href='mailto:$member->email'>$member->email</a></em>";
+                    if($auth_user->id == $member->id) print " (me) ";
                     print "</h6>";
                     $x++;
                     if(($auth_user->id == $group->owner_id && $auth_user->id !==$member->id) ||
