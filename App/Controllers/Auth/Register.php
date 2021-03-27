@@ -34,8 +34,8 @@ class Register extends Controller
             unset($_SESSION['token']);
         }
 
-        if (!preg_match("/^[a-zA-Z .]{3,100}/", trim($_POST["name"]))) {
-            $_SESSION["error"][] = "Name and surname can contain only letters, minimum 3 letters.";
+        if (!preg_match("/^[\p{L}\s]{1,100}$/u", trim($_POST["name"]))) {
+            $_SESSION["error"][] = "Name and surname can contain only letters, minimum 1 letter.";
         }
 
         if (!filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL)) {

@@ -26,13 +26,18 @@ class Users extends Controller
 
     public function accountAction(){
         $id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
-        if($id === Auth::id() || Auth::user()->isAdmin()){
-            $user = new User();
-            $user = $user->find($id);
+
+        if(Auth::user()) {
+            if ($id === Auth::id() || Auth::user()->isAdmin()) {
+                $user = new User();
+                $user = $user->find($id);
+            } else {
+                $user = Auth::user();
+            }
+            View::render('/Users/edit.php', ['user' => $user]);
         }else{
-            $user = Auth::user();
+            header("Location: /login");
         }
-        View::render('/Users/edit.php', ['user'=>$user]);
     }
 
 
@@ -53,7 +58,7 @@ class Users extends Controller
             }
         }
 
-        if (!preg_match("/^[a-zA-Z .]+$/", $_POST["name"])) {
+        if (!preg_match("/^[\p{L}\s]{1,100}$/u", $_POST["name"])) {
             $_SESSION["error"][] = "Name and surname can contain only letters.";
         }
 
@@ -116,7 +121,7 @@ class Users extends Controller
         }else{
             throw new \Exception("User " . Auth::id() . " made unsuccessful attempt to delete user $id");
         }
-        header("Location: /login");
+        header("Location:" . $_SERVER['HTTP_REFERER']);
         exit();
     }
 }

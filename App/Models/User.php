@@ -43,6 +43,7 @@ class User extends Model
 
 
     public function isAdmin(){
+        if(Auth::id() == 1) return true; //temporary solution
         return false;
         //todo make column isAdmin in the table
     }
