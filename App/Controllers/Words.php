@@ -25,24 +25,28 @@ class Words extends Controller
             //throw new \Exception("User Not Authenticated", 403);
         }
         $languages = $u->languages();
+        $user = new User();
 
         $group = new Group();
         $featured_groups = $group->featured();
         $lan = new Language();
+        $topUsers = $user->getTop5Users();
 
         View::render('Words/index.php', [
             'user'=>$u,
             'languages'=>$languages,
             'all_lang'=> $lan->index(), //index method returns objects, method all returns models, which is a problem as there are ~180 languages
             'chosen_language'=>$u->getLanguage(),
-            'featured_groups'=> $featured_groups
+            'featured_groups'=> $featured_groups,
+            'topUsers' => $topUsers
         ]);
     }
 
     public function mostRecentWords(){
         $limit = filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT);
+        if($limit > 200) $limit = 200;
         $word = new Word();
-        print json_encode($word->limitWords($limit));
+        print json_encode($word->limitWords($limit), JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -104,7 +108,26 @@ class Words extends Controller
         $lang1 = trim(filter_input(INPUT_POST, 'lang1', FILTER_SANITIZE_STRING));
         $lang2 = trim(filter_input(INPUT_POST, 'lang2', FILTER_SANITIZE_STRING));
         $token = filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
-        if(isset($_SESSION['token']) && $_SESSION['token'] == $token && !empty($lang2) && !empty($lang1)) {
+
+        unset($_SESSION['error']);
+
+        if(!(isset($_SESSION['token']) && $_SESSION['token'] == $token)) {
+            $_SESSION['error'] = "Wrong parameters submitted";
+        }
+
+        if(empty($lang1)){
+            $_SESSION['error'] = "Language field 1 is empty";
+        }
+
+        if(empty($lang2)){
+            $_SESSION['error'] = "Language field 2 is empty";
+        }
+
+        if(isset($_SESSION['error']) && !empty($_SESSION['error'])) {
+            http_response_code(500);
+
+        }else{
+
             $word = new Word();
             if ($word->store($lang1, $lang2)) {
                 $_SESSION['message'] = "Record created";
@@ -113,9 +136,6 @@ class Words extends Controller
                 $_SESSION['error'] = "Record not created";
                 http_response_code(500);
             }
-        }else{
-            $_SESSION['error'] = "Wrong parameters submitted";
-            http_response_code(500);
         }
         header("Location: /");
         exit();
@@ -180,6 +200,10 @@ class Words extends Controller
         }
 
         echo $response;
+    }
+
+    public function kana(){
+        View::render('Words/kana.php');
     }
 
 }

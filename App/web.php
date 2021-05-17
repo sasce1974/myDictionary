@@ -12,12 +12,16 @@ $router->add('register', ['namespace'=>'Auth', 'controller' => 'Register', 'acti
 $router->add('register/store', ['namespace'=>'Auth', 'controller' => 'Register', 'action' => 'store']);
 $router->add('register/checkEmailExist', ['namespace'=>'Auth', 'controller' => 'Register', 'action' => 'checkEmailExist']);
 
+$router->add('kanjies', ['controller' => 'Kanjies', 'action' => 'index']);
+
 $router->add('', ['controller' => 'Words', 'action' => 'index']);
 $router->add('{controller}', ['action' => 'getAll']);
 $router->add('{controller}/{id:\d+}');
 $router->add('{controller}/{action}');
 $router->add('{controller}/{id:\d+}/{action}');
 $router->add('{controller}/{id:\d+}/{action}/{aid:\d+}');
+
+
 
 
 

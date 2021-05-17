@@ -1,6 +1,7 @@
 <?php
 
 use Core\DB_connection;
+use App\Models\User;
 
 $title = "MyDictionary";
 isset($base_page) ? include $base_page : null;
@@ -98,6 +99,10 @@ isset($featured_groups) ? : $featured_groups = array();
                     }
                     ?>
                 </div>
+                    <div class="d-flex align-items-center py-2">
+                    <label for="limit" style="white-space: nowrap" class="mr-2">Words #</label>
+                    <input class="form-control" id="limit" type="number" min="10" max="200" value="20" onchange="setRecentWords(this.value)">
+                    </div>
                 </div>
                 <nav class="navbar navbar-dark pl-0">
                     <button id="option-toggle" class="navbar-toggler" type="button"
@@ -124,6 +129,7 @@ isset($featured_groups) ? : $featured_groups = array();
                 <thead>
                 <tr id="headRow">
                     <th><?php print $chosen_language->name; ?><span onmousedown="runLoader()" onmouseup="sortTable(0)"> &#9662; </span>
+                        <?php if($chosen_language->id == 1) print "<a class=\"btn btn-outline-primary btn-sm\" href=\"/kanjies\">My Kanji</a>"; ?>
                     </th>
                     <th colspan="2">English<span onmousedown="runLoader()" onmouseup="sortTable(1)"> &#9662; </span></th>
 
@@ -134,10 +140,10 @@ isset($featured_groups) ? : $featured_groups = array();
                             <input type="hidden" value="<?php print $token; ?>" name="token">
                             <!--                    <input aria-label="Language" type="hidden" placeholder="Language" name="language" id="language">-->
                             <div class="col m-0 p-0 pr-1">
-                                <input class="form-control form-control-sm w-100" aria-label="New words1" type="text" placeholder="ex. とり" name="lang1">
+                                <input class="form-control form-control-sm w-100" aria-label="New words1" type="text" placeholder="ex. とり" name="lang1" required>
                             </div>
                             <div class="col m-0 p-0 pr-1">
-                                <input class="form-control form-control-sm w-100" aria-label="New words2" type="text" placeholder="ex. Bird" name="lang2">
+                                <input class="form-control form-control-sm w-100" aria-label="New words2" type="text" placeholder="ex. Bird" name="lang2" required>
                             </div>
                             <div class="col-1 m-0 p-0">
                                 <button class="btn btn-sm btn-outline-success w-100" style="white-space: nowrap" type="submit"><i class="fas fa-check d-xl-none d-inline"></i> <span class="d-none d-xl-inline">Insert</span></button>
@@ -195,6 +201,7 @@ isset($featured_groups) ? : $featured_groups = array();
         </div>
 
         <div class="col-md-2 text-center px-1" style="font-size: small">
+
             <h5>Recent groups</h5>
             <?php
             foreach ($featured_groups as $group){
@@ -214,6 +221,17 @@ isset($featured_groups) ? : $featured_groups = array();
                 print "</div>";
             }
             ?>
+
+            <div class="row m-0 text-center w-100 d-block mt-3 p-2">
+                <h5>Top 5 Wordists</h5>
+                <div class="text-left">
+                <?php
+                foreach ($topUsers as $user){
+                    print "<div class='p-1 border-bottom'><i class='fas fa-user mr-1'></i>" . $user->name . " / " . $user->words_count . "</div>";
+                }
+                ?>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -249,10 +267,10 @@ isset($featured_groups) ? : $featured_groups = array();
         input = "<form class=\"form-row w-100 m-0\" action=\"words/" + data['id'] + "/update\" method=\"post\">\n" +
             "   <input type=\"hidden\" value=\"<?php print $token; ?>\" name=\"token\">\n" +
             "   <div class=\"col m-0 p-0 pr-1\">\n" +
-            "       <input class='form-control form-control-sm w-100' type=\"text\" name=\"lang1\" value='" + data['lang1'] + "'>\n" +
+            "       <input class='form-control form-control-sm w-100' type=\"text\" name=\"lang1\" value='" + data['lang1'] + "' required>\n" +
             "   </div>\n" +
             "   <div class=\"col m-0 p-0 pr-1\">\n" +
-            "       <input class='form-control form-control-sm w-100' type=\"text\" name=\"lang2\" value='" + data['lang2'] + "'>\n" +
+            "       <input class='form-control form-control-sm w-100' type=\"text\" name=\"lang2\" value='" + data['lang2'] + "' required>\n" +
             "   </div>\n" +
             "   <div class=\"col-2 m-0 p-0\">\n" +
             "       <div class='d-flex m-0'>" +
@@ -268,6 +286,7 @@ isset($featured_groups) ? : $featured_groups = array();
         form.innerHTML = old_input;
     }
 </script>
+<script src="js/cookies.js"></script>
 </body>
 </html>
 

@@ -162,7 +162,7 @@ abstract class Model implements iModel, \Countable
         $test_q = $this->con->query("SHOW COLUMNS FROM $this->table LIKE '$item'");
         if(!$test_q->rowCount()) throw new \Exception("Column $item not found in table $this->table");
 
-        $q = "SELECT COUNT(*) FROM $this->table WHERE $item = ?";
+        $q = "SELECT COUNT(id) FROM $this->table WHERE $item = ?";
         $query = $this->con->prepare($q);
         $query->execute(array($value));
         return $query->fetchColumn();

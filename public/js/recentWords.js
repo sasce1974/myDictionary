@@ -1,6 +1,24 @@
-
+//set amount of words to be shown
+function setRecentWords(value) {
+    if(value == "") value = 20;
+    setCookie('wordsLimit', value, '365');
+    recentWords(value);
+}
 
 function recentWords(limit) {
+
+    if(limit === "" || limit == null){
+        if(checkCookie('wordsLimit')){
+            var wordsLimit = getCookie('wordsLimit');
+        }
+        if(wordsLimit){
+            limit = wordsLimit;
+        } else{
+            limit = 20;
+        }
+        console.log(wordsLimit);
+    }
+
     $.get('/words/mostRecentWords', {'limit':limit}, fillRows).fail(errorMessage);
 }
 
@@ -47,5 +65,11 @@ function deleteWord(id){
 
 window.onload = function () {
     runLoader();
-    recentWords(20);
+    var limit = document.getElementById('limit');
+    //set limit from the cookie
+    if(checkCookie('wordsLimit')){
+        limit.value = getCookie('wordsLimit');
+    }
+    recentWords();
 };
+

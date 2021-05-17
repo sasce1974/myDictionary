@@ -53,9 +53,9 @@ th span:hover{
 tbody tr{
     transition: all ease 0.2s;
 }
-td:nth-child(3){
+/*td:nth-child(3){
     text-align: right;
-}
+}*/
 
 tbody tr:hover{
     background-color: darkgreen;

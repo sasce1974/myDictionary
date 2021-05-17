@@ -166,7 +166,6 @@ if (Auth::check()) {
                         <div class="m-3">
 
                             <?php
-
                             if(explode("/", $_SERVER['REQUEST_URI'])[1] == 'login'){
                                 include_once "Login/_login_form.php";
                             }elseif(explode("/", $_SERVER['REQUEST_URI'])[1] == 'register') {

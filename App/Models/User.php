@@ -209,4 +209,13 @@ class User extends Model
         if($query->rowCount() === 1) return true;
         return false;
     }
+
+
+    public function getTop5Users(){
+        $q = "SELECT u.id, u.name, COUNT(w.id) as 'words_count' 
+            FROM users u, words w WHERE u.id = w.user_id 
+            GROUP BY u.id ORDER BY words_count DESC LIMIT 5";
+        $query = $this->con->query($q);
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
 }

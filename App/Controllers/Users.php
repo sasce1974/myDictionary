@@ -7,7 +7,6 @@ use App\Models\Auth;
 use App\Models\User;
 use Core\Controller;
 use Core\View;
-use http\Header;
 
 class Users extends Controller
 {
@@ -123,5 +122,11 @@ class Users extends Controller
         }
         header("Location:" . $_SERVER['HTTP_REFERER']);
         exit();
+    }
+
+    public function topUsersAction(){
+        $user = new User();
+        //var_dump($user->getTop5Users());
+        return json_encode( $user->getTop5Users());
     }
 }
